@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
+
     <title>Firewall Dashboard</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
 
-<h1>🛡 Firewall Dashboard</h1>
+<h1>Firewall Dashboard</h1>
 
 <div class="cards">
 
@@ -30,33 +31,51 @@
         <h1>{{ allowed }}</h1>
     </div>
 
+    <div class="card">
+        <h2>Unique IPs</h2>
+        <h1>{{ unique_ips }}</h1>
+    </div>
+
+    <div class="card">
+        <h2>Blocked %</h2>
+        <h1>{{ blocked_percent }}%</h1>
+    </div>
+
 </div>
+
 
 <table>
 
 <tr>
-    <th>ID</th>
-    <th>IP Address</th>
-    <th>Port</th>
-    <th>Action</th>
+<th>ID</th>
+<th>IP Address</th>
+<th>Port</th>
+<th>Action</th>
 </tr>
 
 {% for log in logs %}
 
 <tr>
-    <td>{{ log[0] }}</td>
-    <td>{{ log[1] }}</td>
-    <td>{{ log[2] }}</td>
 
-    <td>
+<td>{{ log[0] }}</td>
 
-        {% if log[3] == "BLOCKED" %}
-            <span class="blocked">{{ log[3] }}</span>
-        {% else %}
-            <span class="allowed">{{ log[3] }}</span>
-        {% endif %}
+<td>{{ log[1] }}</td>
 
-    </td>
+<td>{{ log[2] }}</td>
+
+<td>
+
+{% if log[3]=="BLOCKED" %}
+
+<span class="blocked">BLOCKED</span>
+
+{% else %}
+
+<span class="allowed">ALLOWED</span>
+
+{% endif %}
+
+</td>
 
 </tr>
 
