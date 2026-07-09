@@ -1,19 +1,15 @@
-from scapy.all import sniff
+from logger import save_log
 
 allowed_ports = [80, 443]
 
-def check_packet(packet):
 
-    # Check if packet has TCP layer
-    if packet.haslayer("TCP"):
+def check_port(ip, port):
 
-        port = packet["TCP"].dport
+    if port in allowed_ports:
+        action = "ALLOWED"
+    else:
+        action = "BLOCKED"
 
-        if port in allowed_ports:
-            print("ALLOWED:", port)
+    print(ip, port, action)
 
-        else:
-            print("BLOCKED:", port)
-
-# Start sniffing packets
-sniff(prn=check_packet)
+    save_log(ip, port, action)

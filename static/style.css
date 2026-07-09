@@ -15,7 +15,72 @@ h1{
 text-align:center;
 margin-bottom:40px;
 }
+.search-box{
 
+display:flex;
+
+justify-content:center;
+
+gap:15px;
+
+margin-bottom:35px;
+
+}
+
+.search-box input{
+
+width:320px;
+
+padding:12px;
+
+font-size:16px;
+
+border:none;
+
+border-radius:8px;
+
+outline:none;
+
+}
+.search-box select{
+
+padding:12px;
+
+font-size:16px;
+
+border:none;
+
+border-radius:8px;
+
+outline:none;
+
+cursor:pointer;
+
+}
+
+.search-box button{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:12px 25px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-size:16px;
+
+}
+
+.search-box button:hover{
+
+background:#1d4ed8;
+
+}
 .cards{
 
 display:grid;

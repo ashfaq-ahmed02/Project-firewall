@@ -13,6 +13,35 @@
 <body>
 
 <h1>Firewall Dashboard</h1>
+<form method="GET" class="search-box">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search IP..."
+        value="{{ search }}">
+
+    <select name="action">
+
+        <option value="ALL" {% if action=="ALL" %}selected{% endif %}>
+            All Logs
+        </option>
+
+        <option value="BLOCKED" {% if action=="BLOCKED" %}selected{% endif %}>
+            Blocked
+        </option>
+
+        <option value="ALLOWED" {% if action=="ALLOWED" %}selected{% endif %}>
+            Allowed
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
 
 <div class="cards">
 
@@ -48,6 +77,7 @@
 
 <tr>
 <th>ID</th>
+<th>Time</th>
 <th>IP Address</th>
 <th>Port</th>
 <th>Action</th>
@@ -58,10 +88,16 @@
 <tr>
 
 <td>{{ log[0] }}</td>
-
+<td>{{ log[4] }}</td>
 <td>{{ log[1] }}</td>
-
 <td>{{ log[2] }}</td>
+<td>
+{% if log[3] == "BLOCKED" %}
+<span class="blocked">BLOCKED</span>
+{% else %}
+<span class="allowed">ALLOWED</span>
+{% endif %}
+</td>
 
 <td>
 
@@ -83,6 +119,15 @@
 
 </table>
 
+<!-- Auto Refresh Every 5 Seconds -->
+<script>
+    setTimeout(function () {
+        window.location.reload();
+    }, 3000);
+</script>
+
+</body>
+</html>
 </body>
 
 </html>

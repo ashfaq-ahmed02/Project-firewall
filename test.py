@@ -1,3 +1,12 @@
-from logger import save_log
+import sqlite3
 
-save_log(ip="192.168.1.5", port=22, action="BLOCKED")
+conn = sqlite3.connect("firewall_logs.db")
+cursor = conn.cursor()
+
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+print("Tables:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM logs")
+print("Rows:", cursor.fetchall())
+
+conn.close()
