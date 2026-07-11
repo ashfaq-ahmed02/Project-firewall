@@ -1,133 +1,289 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
 
-    <title>Firewall Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+<title>RuShield SOC Dashboard</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
 
-<h1>Firewall Dashboard</h1>
-<form method="GET" class="search-box">
+<div class="container">
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Search IP..."
-        value="{{ search }}">
+    <!-- Sidebar -->
 
-    <select name="action">
+    <aside class="sidebar">
 
-        <option value="ALL" {% if action=="ALL" %}selected{% endif %}>
-            All Logs
-        </option>
+        <h2>🛡 RuShield</h2>
 
-        <option value="BLOCKED" {% if action=="BLOCKED" %}selected{% endif %}>
-            Blocked
-        </option>
+        <ul>
 
-        <option value="ALLOWED" {% if action=="ALLOWED" %}selected{% endif %}>
-            Allowed
-        </option>
+            <li class="active">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </li>
 
-    </select>
+            <li>
+                <i class="fa-solid fa-network-wired"></i>
+                Live Logs
+            </li>
 
-    <button type="submit">
-        Search
-    </button>
+            <li>
+                <i class="fa-solid fa-shield-halved"></i>
+                Firewall
+            </li>
 
-</form>
+            <li>
+                <i class="fa-solid fa-chart-pie"></i>
+                Analytics
+            </li>
 
-<div class="cards">
+            <li>
+                <i class="fa-solid fa-bell"></i>
+                Alerts
+            </li>
 
-    <div class="card">
-        <h2>Total Logs</h2>
-        <h1>{{ total }}</h1>
+            <li>
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+       <header class="header">
+
+    <div class="header-left">
+
+        <h1>🛡 RuShield SOC Dashboard</h1>
+
+        <p>AI Powered Firewall Monitoring System</p>
+
     </div>
 
-    <div class="card">
-        <h2>Blocked</h2>
-        <h1>{{ blocked }}</h1>
+    <div class="header-right">
+
+        <input
+            type="text"
+            placeholder="🔍 Search..."
+            class="search-box">
+
+        <div class="clock">
+
+            <span id="clock"></span>
+
+        </div>
+
+        <div class="profile">
+
+            <i class="fa-solid fa-user-shield"></i>
+
+            Admin
+
+        </div>
+
     </div>
 
-    <div class="card">
-        <h2>Allowed</h2>
-        <h1>{{ allowed }}</h1>
+</header>
+        <!-- Cards -->
+<section class="cards">
+
+    <div class="card total">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Total Logs</h4>
+
+                <h1>{{ total }}</h1>
+
+                <p>Network Traffic</p>
+
+            </div>
+
+            <i class="fa-solid fa-database"></i>
+
+        </div>
+
     </div>
 
-    <div class="card">
-        <h2>Unique IPs</h2>
-        <h1>{{ unique_ips }}</h1>
+    <div class="card blocked-card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Blocked</h4>
+
+                <h1>{{ blocked }}</h1>
+
+                <p>Threats Stopped</p>
+
+            </div>
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+        </div>
+
     </div>
 
-    <div class="card">
-        <h2>Blocked %</h2>
-        <h1>{{ blocked_percent }}%</h1>
+    <div class="card allowed-card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Allowed</h4>
+
+                <h1>{{ allowed }}</h1>
+
+                <p>Safe Connections</p>
+
+            </div>
+
+            <i class="fa-solid fa-circle-check"></i>
+
+        </div>
+
+    </div>
+
+    <div class="card ip-card">
+
+        <div class="card-top">
+
+            <div>
+
+                <h4>Unique IPs</h4>
+
+                <h1>{{ unique_ips }}</h1>
+
+                <p>Connected Hosts</p>
+
+            </div>
+
+            <i class="fa-solid fa-network-wired"></i>
+
+        </div>
+
+    </div>
+
+    <div class="card threat-card">
+
+    <div class="card-top">
+
+        <div>
+
+            <h4>Threat Level</h4>
+
+            <h1>{{ threat_level }}</h1>
+
+           {% if threat_level == "HIGH" %}
+
+<p style="color:red;">High Risk Detected</p>
+
+{% elif threat_level == "MEDIUM" %}
+
+<p style="color:orange;">Medium Risk</p>
+
+{% else %}
+
+<p style="color:lime;">System Safe</p>
+
+{% endif %}
+
+        </div>
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
     </div>
 
 </div>
 
+</section>
 
-<table>
+        <!-- Table -->
 
-<tr>
-<th>ID</th>
-<th>Time</th>
-<th>IP Address</th>
-<th>Port</th>
-<th>Action</th>
-</tr>
+        <section class="table-box">
 
-{% for log in logs %}
+            <h2>Recent Firewall Logs</h2>
 
-<tr>
+            <table>
 
-<td>{{ log[0] }}</td>
-<td>{{ log[4] }}</td>
-<td>{{ log[1] }}</td>
-<td>{{ log[2] }}</td>
-<td>
-{% if log[3] == "BLOCKED" %}
-<span class="blocked">BLOCKED</span>
-{% else %}
-<span class="allowed">ALLOWED</span>
-{% endif %}
-</td>
+                <tr>
 
-<td>
+                    <th>ID</th>
+                    <th>Time</th>
+                    <th>IP Address</th>
+                    <th>Port</th>
+                    <th>Action</th>
 
-{% if log[3]=="BLOCKED" %}
+                </tr>
 
-<span class="blocked">BLOCKED</span>
+                {% for log in logs %}
 
-{% else %}
+                <tr>
 
-<span class="allowed">ALLOWED</span>
+                    <td>{{ log[0] }}</td>
+                    <td>{{ log[4] }}</td>
+                    <td>{{ log[1] }}</td>
+                    <td>{{ log[2] }}</td>
 
-{% endif %}
+                    <td>
 
-</td>
+                        {% if log[3]=="BLOCKED" %}
 
-</tr>
+                        <span class="blocked">BLOCKED</span>
 
-{% endfor %}
+                        {% else %}
 
-</table>
+                        <span class="allowed">ALLOWED</span>
 
-<!-- Auto Refresh Every 5 Seconds -->
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
 <script>
-    setTimeout(function () {
-        window.location.reload();
-    }, 3000);
+
+function updateClock(){
+
+const now = new Date();
+
+document.getElementById("clock").innerHTML =
+now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
 </script>
 
 </body>
-</html>
-</body>
-
 </html>

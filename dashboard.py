@@ -45,17 +45,47 @@ def home():
 
     blocked_percent = round((blocked / total) * 100, 2) if total else 0
 
+    if blocked <= 20:
+        threat_level = "LOW"
+    elif blocked <= 50:
+        threat_level = "MEDIUM"
+    else:
+        threat_level = "HIGH"
+
+    cursor.execute("""
+    SELECT port, COUNT(*)
+    FROM logs
+    WHERE action='BLOCKED'
+    GROUP BY port
+    ORDER BY COUNT(*) DESC
+    LIMIT 5
+    """)
+
+    blocked_ports = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT ip, COUNT(*)
+    FROM logs
+    GROUP BY ip
+    ORDER BY COUNT(*) DESC
+    LIMIT 5
+    """)
+
+    top_ips = cursor.fetchall()
     conn.close()
 
     return render_template(
         "index.html",
         logs=logs,
+        top_ips=top_ips,
         total=total,
         blocked=blocked,
         allowed=allowed,
         unique_ips=unique_ips,
+        blocked_ports=blocked_ports,
         blocked_percent=blocked_percent,
         search=search,
+        threat_level=threat_level,
         action=action
     )
 
