@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, jsonify, request
 from database import get_connection
 
 app = Flask(__name__)
@@ -88,7 +88,95 @@ def home():
         threat_level=threat_level,
         action=action
     )
+from flask import jsonify
 
+@app.route("/api/logs")
+def api_logs():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT id, ip, port, action, created_at
+    FROM logs
+    ORDER BY id DESC
+    LIMIT 20
+    """)
+
+    logs = cursor.fetchall()
+
+    conn.close()
+
+    data = []
+
+    for log in logs:
+
+        data.append({
+            "id": log[0],
+            "ip": log[1],
+            "port": log[2],
+            "action": log[3],
+            "time": str(log[4])
+        })
+
+    return jsonify(data)
 
 if __name__ == "__main__":
+    @app.route("/api/stats")
+    def api_stats():
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM logs")
+        total = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM logs WHERE action='BLOCKED'")
+        blocked = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
+        allowed = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
+        unique_ips = cursor.fetchone()[0]
+
+        conn.close()
+
+        return jsonify({
+            "total": total,
+            "blocked": blocked,
+            "allowed": allowed,
+            "unique_ips": unique_ips
+        })
+
     app.run(debug=True)
+
+
+    @app.route("/api/logs")
+    def api_logs():
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT id, ip, port, action, time
+            FROM logs
+            ORDER BY id DESC
+            LIMIT 10
+        """)
+
+        logs = cursor.fetchall()
+        conn.close()
+
+        data = []
+
+        for log in logs:
+            data.append({
+                "id": log[0],
+                "ip": log[1],
+                "port": log[2],
+                "action": log[3],
+                "time": log[4]
+            })
+
+        return jsonify(data)
