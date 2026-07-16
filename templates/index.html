@@ -411,33 +411,27 @@
 
                     </thead>
 
-                    <tbody>
+                    <tbody id="logs-body">
 
-                        <tbody id="logs-body">
+{% for log in logs[:5] %}
 
-    {% for log in logs[:5] %}
+<tr>
+    <td>{{ log[4] }}</td>
+    <td>{{ log[1] }}</td>
+    <td>{{ log[2] }}</td>
 
-    <tr>
+    <td>
+        {% if log[3] == "BLOCKED" %}
+            <span class="badge blocked">BLOCKED</span>
+        {% else %}
+            <span class="badge allowed">ALLOWED</span>
+        {% endif %}
+    </td>
+</tr>
 
-        <td>{{ log[4] }}</td>
-        <td>{{ log[1] }}</td>
-        <td>{{ log[2] }}</td>
-
-        <td>
-            {% if log[3] == "BLOCKED" %}
-                <span class="badge blocked">BLOCKED</span>
-            {% else %}
-                <span class="badge allowed">ALLOWED</span>
-            {% endif %}
-        </td>
-
-    </tr>
-
-    {% endfor %}
+{% endfor %}
 
 </tbody>
-
-                </table>
 
             </div>
 
@@ -534,8 +528,9 @@
 
         </section>
 
-      <section class="chart-section">
+     <section class="chart-section">
 
+    <!-- Network Traffic -->
     <div class="card chart-card">
 
         <div class="card-header">
@@ -545,13 +540,15 @@
         <canvas id="trafficChart"></canvas>
 
     </div>
-          <section class="charts-grid">
 
-    <div class="card">
+    <!-- Attack Distribution -->
+    <div class="card pie-card">
 
-        <h3>Blocked vs Allowed</h3>
+        <div class="card-header">
+            <h3>Attack Distribution</h3>
+        </div>
 
-        <canvas id="trafficChart"></canvas>
+        <canvas id="attackChart"></canvas>
 
     </div>
 
@@ -574,8 +571,7 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Dashboard JS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 </body>

@@ -1,228 +1,201 @@
-document.addEventListener("DOMContentLoaded", function () {
-// ==========================
-// Attack Distribution Chart
-// ==========================
+let trafficChart;
+let attackChart;
 
-const attackCanvas = document.getElementById("attackChart");
-
-if (attackCanvas) {
-
-    new Chart(attackCanvas, {
-
-        type: "doughnut",
-
-        data: {
-
-            labels: [
-                "Allowed",
-                "Blocked",
-                "Scanning"
-            ],
-
-            datasets: [{
-
-                data: [416, 2346, 120],
-
-                backgroundColor: [
-                    "#22c55e",
-                    "#ef4444",
-                    "#f59e0b"
-                ],
-
-                borderWidth: 0
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    position: "bottom",
-
-                    labels: {
-
-                        color: "#ffffff",
-                        padding: 20,
-                        font: {
-                            size: 14
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
-}
-    const canvas = document.getElementById("trafficChart");
-
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: [
-                "Mon",
-                "Tue",
-                "Wed",
-                "Thu",
-                "Fri",
-                "Sat",
-                "Sun"
-            ],
-            datasets: [{
-                label: "Network Traffic",
-                data: [12, 19, 10, 25, 18, 30, 22],
-                borderColor: "#3b82f6",
-                backgroundColor: "rgba(59,130,246,0.2)",
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    labels: {
-                        color: "#ffffff"
-                    }
-                }
-            },
-
-            scales: {
-
-                x: {
-                    ticks: {
-                        color: "#cbd5e1"
-                    },
-                    grid: {
-                        color: "#334155"
-                    }
-                },
-
-                y: {
-                    ticks: {
-                        color: "#cbd5e1"
-                    },
-                    grid: {
-                        color: "#334155"
-                    }
-                }
-
-            }
-
-        }
-
-    });
-
-});
-// ==========================
-// Live Firewall Logs
-// ==========================
-
+// ----------------------------
+// Load Recent Logs
+// ----------------------------
 async function loadLogs() {
 
-    try {
+    const response = await fetch("/api/logs");
+    const logs = await response.json();
 
-        const response = await fetch("/api/logs");
+    const tbody = document.getElementById("logs-body");
 
-        const logs = await response.json();
+    if (!tbody) return;
 
-        const tbody = document.getElementById("logs-body");
+    tbody.innerHTML = "";
 
-        if (!tbody) return;
+    logs.slice(0,5).forEach(log => {
 
-        tbody.innerHTML = "";
+        tbody.innerHTML += `
+        <tr>
+            <td>${log.time}</td>
+            <td>${log.ip}</td>
+            <td>${log.port}</td>
+            <td>
+                <span class="badge ${log.action==="BLOCKED" ? "blocked" : "allowed"}">
+                    ${log.action}
+                </span>
+            </td>
+        </tr>
+        `;
 
-        logs.slice(0,5).forEach(log => {
+    });
 
-            tbody.innerHTML += `
+}
 
-            <tr>
+// ----------------------------
+// Load Statistics
+// ----------------------------
+async function loadStats(){
 
-                <td>${log.time}</td>
+    const response = await fetch("/api/stats");
+    const stats = await response.json();
 
-                <td>${log.ip}</td>
+    // Update summary cards
 
-                <td>${log.port}</td>
+    document.getElementById("totalLogs").innerText = stats.total;
+    document.getElementById("allowedLogs").innerText = stats.allowed;
+    document.getElementById("blockedLogs").innerText = stats.blocked;
+    document.getElementById("uniqueIPs").innerText = stats.unique_ips;
 
-                <td>
+    // Doughnut Chart
 
-                    <span class="badge ${log.action.toLowerCase()}">
+    if(trafficChart){
 
-                        ${log.action}
+        trafficChart.data.datasets[0].data=[
+            stats.allowed,
+            stats.blocked
+        ];
 
-                    </span>
-
-                </td>
-
-            </tr>
-
-            `;
-
-        });
+        trafficChart.update();
 
     }
 
-    catch(error){
+    // Pie Chart
 
-        console.log(error);
+    if(attackChart){
+
+        attackChart.data.datasets[0].data=[
+            stats.blocked,
+            stats.allowed
+        ];
+
+        attackChart.update();
 
     }
 
 }
+
+// ----------------------------
+// Doughnut Chart
+// ----------------------------
+
+function createTrafficChart(){
+
+    const ctx=document.getElementById("trafficChart");
+
+    if(!ctx) return;
+
+    trafficChart=new Chart(ctx,{
+
+        type:"doughnut",
+
+        data:{
+
+            labels:["Allowed","Blocked"],
+
+            datasets:[{
+
+                data:[0,0],
+
+                backgroundColor:[
+                    "#22c55e",
+                    "#ef4444"
+                ],
+
+                borderWidth:0
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+                    labels:{
+                        color:"#fff"
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+// ----------------------------
+// Pie Chart
+// ----------------------------
+
+function createAttackChart(){
+
+    const ctx=document.getElementById("attackChart");
+
+    if(!ctx) return;
+
+    attackChart=new Chart(ctx,{
+
+        type:"pie",
+
+        data:{
+
+            labels:["Blocked","Allowed"],
+
+            datasets:[{
+
+                data:[0,0],
+
+                backgroundColor:[
+                    "#ef4444",
+                    "#22c55e"
+                ],
+
+                borderWidth:0
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+                    labels:{
+                        color:"#fff"
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+createTrafficChart();
+createAttackChart();
 
 loadLogs();
-
-setInterval(loadLogs,5000);
-
-// ==========================
-// Live Dashboard Stats
-// ==========================
-
-async function loadStats() {
-
-    try {
-
-        const response = await fetch("/api/stats");
-
-        const stats = await response.json();
-
-        document.getElementById("totalLogs").innerText = stats.total;
-
-        document.getElementById("allowedLogs").innerText = stats.allowed;
-
-        document.getElementById("blockedLogs").innerText = stats.blocked;
-
-        document.getElementById("uniqueIPs").innerText = stats.unique_ips;
-
-    }
-
-    catch(error){
-
-        console.log(error);
-
-    }
-
-}
-
 loadStats();
 
-setInterval(loadStats,5000);
+setInterval(()=>{
+
+    loadLogs();
+    loadStats();
+
+},5000);

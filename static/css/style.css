@@ -929,3 +929,20 @@ font-weight:700;
 font-size:14px;
 
 }
+.chart-section{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    margin-top:25px;
+}
+
+.chart-card,
+.pie-card{
+    height:420px;
+}
+
+.chart-card canvas,
+.pie-card canvas{
+    width:100% !important;
+    height:330px !important;
+}
