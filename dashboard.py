@@ -42,6 +42,19 @@ def home():
 
     cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
     unique_ips = cursor.fetchone()[0]
+    # AI Threat Analysis
+
+    if blocked < 100:
+        ai_level = "LOW"
+        ai_status = "Network is Stable"
+
+    elif blocked < 1000:
+        ai_level = "MEDIUM"
+        ai_status = "Suspicious Activity Detected"
+
+    else:
+        ai_level = "HIGH"
+        ai_status = "Possible Attack Detected"
 
     blocked_percent = round((blocked / total) * 100, 2) if total else 0
 
@@ -148,8 +161,8 @@ if __name__ == "__main__":
             "allowed": allowed,
             "unique_ips": unique_ips,
 
-            "ai_status": "Network is Stable",
-            "ai_level": "LOW"
+            "ai_status": ai_status,
+            "ai_level": ai_level
         })
 
     app.run(debug=True)
