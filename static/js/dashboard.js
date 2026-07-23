@@ -59,6 +59,29 @@ async function loadStats() {
     document.getElementById("allowedLogs").textContent = stats.allowed;
     document.getElementById("blockedLogs").textContent = stats.blocked;
     document.getElementById("uniqueIPs").textContent = stats.unique_ips;
+    // Update Threat Score
+let threatScore = 0;
+
+if (stats.total > 0) {
+    threatScore = ((stats.allowed / stats.total) * 100).toFixed(1);
+}
+
+document.getElementById("threatScore").textContent = threatScore + "%";
+
+const status = document.getElementById("threatStatus");
+
+if (threatScore >= 80) {
+    status.textContent = "Secure";
+    status.style.color = "#22c55e"; // Green
+}
+else if (threatScore >= 50) {
+    status.textContent = "Warning";
+    status.style.color = "#f59e0b"; // Orange
+}
+else {
+    status.textContent = "Critical";
+    status.style.color = "#ef4444"; // Red
+}
 
     // Doughnut Chart
     trafficChart.data.datasets[0].data = [
