@@ -100,7 +100,7 @@ def api_logs():
     SELECT id, ip, port, action, created_at
     FROM logs
     ORDER BY id DESC
-    LIMIT 20
+    LIMIT 10
     """)
 
     logs = cursor.fetchall()

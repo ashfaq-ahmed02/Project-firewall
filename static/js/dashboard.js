@@ -6,6 +6,7 @@ let attackChart;
 // ----------------------
 async function loadLogs() {
     const response = await fetch("/api/logs");
+    const liveFeed = document.getElementById("live-feed");
     const logs = await response.json();
 
     const tbody = document.getElementById("logs-body");
@@ -13,6 +14,9 @@ async function loadLogs() {
     if (!tbody) return;
 
     tbody.innerHTML = "";
+    if (liveFeed) {
+    liveFeed.innerHTML = "";
+}
 
     logs.slice(0, 5).forEach(log => {
         tbody.innerHTML += `
@@ -27,6 +31,18 @@ async function loadLogs() {
             </td>
         </tr>
         `;
+        if (liveFeed) {
+    const dotClass = log.action === "BLOCKED"
+        ? "red-dot"
+        : "green-dot";
+
+    liveFeed.innerHTML += `
+        <div class="feed-item">
+            <span class="${dotClass}"></span>
+            <p>${log.ip} ${log.action} on Port ${log.port}</p>
+        </div>
+    `;
+}
     });
 }
 
