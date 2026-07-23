@@ -1,6 +1,30 @@
 let trafficChart;
 let attackChart;
 
+// Remember the latest log
+let lastLogId = 0;
+
+// Show notification
+function showToast(title, message){
+
+    const container = document.getElementById("toastContainer");
+
+    const toast = document.createElement("div");
+
+    toast.className = "toast";
+
+    toast.innerHTML = `
+        <h4>${title}</h4>
+        <p>${message}</p>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+
+}
 // ----------------------
 // Load Firewall Logs
 // ----------------------
@@ -19,6 +43,20 @@ async function loadLogs() {
 }
 
     logs.slice(0, 5).forEach(log => {
+        if(log.id > lastLogId){
+
+    if(log.action === "BLOCKED"){
+
+        showToast(
+            "🚨 Threat Blocked",
+            `${log.ip} blocked on Port ${log.port}`
+        );
+
+    }
+
+    lastLogId = log.id;
+
+}
         tbody.innerHTML += `
         <tr>
             <td>${log.time}</td>
@@ -67,6 +105,13 @@ if (stats.total > 0) {
 }
 
 document.getElementById("threatScore").textContent = threatScore + "%";
+
+const aiBox = document.getElementById("aiInsights");
+
+aiBox.innerHTML = `
+    <li>🤖 ${stats.ai_status}</li>
+    <li>Threat Level: <strong>${stats.ai_level}</strong></li>
+`;
 
 const status = document.getElementById("threatStatus");
 

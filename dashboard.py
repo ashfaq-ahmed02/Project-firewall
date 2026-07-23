@@ -146,7 +146,10 @@ if __name__ == "__main__":
             "total": total,
             "blocked": blocked,
             "allowed": allowed,
-            "unique_ips": unique_ips
+            "unique_ips": unique_ips,
+
+            "ai_status": "Network is Stable",
+            "ai_level": "LOW"
         })
 
     app.run(debug=True)
