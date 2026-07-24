@@ -1,5 +1,6 @@
 let trafficChart;
 let attackChart;
+let lastLogId = 0;
 
 // Remember the latest log
 let lastLogId = 0;
@@ -69,6 +70,19 @@ async function loadLogs() {
             </td>
         </tr>
         `;
+        if (log.id > lastLogId) {
+
+    if (log.action === "BLOCKED") {
+
+        showToast(
+            `🚨 Blocked Attack<br>IP: ${log.ip}<br>Port: ${log.port}`,
+            "error"
+        );
+
+    }
+
+    lastLogId = log.id;
+}
         if (liveFeed) {
     const dotClass = log.action === "BLOCKED"
         ? "red-dot"
@@ -201,3 +215,20 @@ setInterval(() => {
     loadLogs();
     loadStats();
 }, 5000);
+
+function showToast(message, type = "error") {
+
+    const container = document.getElementById("toast-container");
+
+    const toast = document.createElement("div");
+
+    toast.className = `toast ${type}`;
+
+    toast.innerHTML = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+}

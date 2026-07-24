@@ -33,6 +33,9 @@ def home():
 
     cursor.execute("SELECT COUNT(*) FROM logs")
     total = cursor.fetchone()[0]
+    
+    cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
+    unique_ips = cursor.fetchone()[0]
 
     cursor.execute("SELECT COUNT(*) FROM logs WHERE action='BLOCKED'")
     blocked = cursor.fetchone()[0]
@@ -40,8 +43,7 @@ def home():
     cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
     allowed = cursor.fetchone()[0]
 
-    cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
-    unique_ips = cursor.fetchone()[0]
+
     # AI Threat Analysis
 
     if blocked < 100:
@@ -150,19 +152,42 @@ if __name__ == "__main__":
         cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
         allowed = cursor.fetchone()[0]
 
+        # AI Threat Analysis
+        if blocked < 100:
+            ai_level = "LOW"
+            ai_status = "Network is Stable"
+
+        elif blocked < 1000:
+            ai_level = "MEDIUM"
+            ai_status = "Suspicious Activity Detected"
+
+        else:
+            ai_level = "HIGH"
+            ai_status = "Possible Attack Detected"
+
         cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
         unique_ips = cursor.fetchone()[0]
 
-        conn.close()
+        cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
+        unique_ips = cursor.fetchone()[0]
 
+
+        cursor.execute("""
+        SELECT action, COUNT(*)
+        FROM logs
+        GROUP BY action
+        """)
+
+        chart_data = cursor.fetchall()
+        conn.close()
         return jsonify({
             "total": total,
             "blocked": blocked,
             "allowed": allowed,
             "unique_ips": unique_ips,
-
             "ai_status": ai_status,
-            "ai_level": ai_level
+            "ai_level": ai_level,
+            "chart_data": chart_data
         })
 
     app.run(debug=True)
