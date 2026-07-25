@@ -3,8 +3,6 @@ let attackChart;
 let lastLogId = 0;
 
 // Remember the latest log
-let lastLogId = 0;
-
 // Show notification
 function showToast(title, message){
 
