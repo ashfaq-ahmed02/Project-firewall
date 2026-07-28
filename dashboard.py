@@ -180,6 +180,16 @@ if __name__ == "__main__":
 
         chart_data = cursor.fetchall()
         conn.close()
+
+        cursor.execute("""
+        SELECT ip, COUNT(*)
+        FROM logs
+        GROUP BY ip
+        ORDER BY COUNT(*) DESC
+        LIMIT 5
+        """)
+
+        top_attackers = cursor.fetchall()
         return jsonify({
             "total": total,
             "blocked": blocked,
@@ -188,6 +198,7 @@ if __name__ == "__main__":
             "ai_status": ai_status,
             "ai_level": ai_level,
             "chart_data": chart_data
+            "top_attackers": top_attackers
         })
 
     app.run(debug=True)
@@ -222,4 +233,3 @@ if __name__ == "__main__":
 
         return jsonify(data)
 
-    
