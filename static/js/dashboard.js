@@ -94,6 +94,7 @@ async function loadLogs() {
     `;
 }
     });
+    updateLiveFeed(logs);
 }
 
 // ----------------------
@@ -229,4 +230,33 @@ function showToast(message, type = "error") {
     setTimeout(() => {
         toast.remove();
     }, 4000);
+}
+
+function updateLiveFeed(logs) {
+
+    const feed = document.getElementById("liveFeed");
+
+    if (!feed) return;
+
+    feed.innerHTML = "";
+
+    logs.slice(0, 5).forEach(log => {
+
+        const dot =
+            log.action === "BLOCKED"
+                ? "🔴"
+                : "🟢";
+
+        feed.innerHTML += `
+            <div class="feed-item">
+                <p>
+                    ${dot} <strong>${log.action}</strong><br>
+                    ${log.ip}<br>
+                    Port ${log.port}
+                </p>
+            </div>
+        `;
+
+    });
+
 }
