@@ -1,52 +1,65 @@
-# Project-firewall
-# 🛡️ RuShield XDR
+# 🛡️ RuShield XDR - Real-Time Firewall Monitoring & Threat Detection
 
-A real-time firewall monitoring and threat detection dashboard built using **Python, Flask, Scapy, MySQL, HTML, CSS, and JavaScript**.
-
-RuShield XDR captures live network packets, applies firewall rules, stores logs in a MySQL database, and visualizes network activity through a modern web dashboard.
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
+![Flask](https://img.shields.io/badge/Flask-Web%20Framework-black?style=for-the-badge&logo=flask)
+![MySQL](https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge&logo=mysql)
+![Scapy](https://img.shields.io/badge/Scapy-Network%20Sniffing-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
 ---
 
-## 📸 Dashboard Preview
+## 📌 Overview
 
-> *(Add screenshots here after uploading them to GitHub)*
+RuShield XDR is a **real-time firewall monitoring and threat detection system** built using **Python, Flask, Scapy, MySQL, HTML, CSS, and JavaScript**.
+
+The application captures live network packets, analyzes them using custom firewall rules, stores the logs in a MySQL database, and visualizes security events through a modern web dashboard.
+
+The project demonstrates the fundamentals of **Network Security**, **Firewall Development**, **Packet Analysis**, and **Real-Time Security Monitoring**.
 
 ---
 
 # ✨ Features
 
-- 📡 Real-time packet sniffing using Scapy
-- 🔥 Firewall rule engine (Allowed / Blocked ports)
-- 🗄️ MySQL database integration
-- 📊 Live dashboard with firewall statistics
-- 📈 Network traffic visualization using Chart.js
-- 🚨 Live threat notifications
-- 🤖 AI-style threat level analysis
-- 📜 Real-time firewall logs
-- 🌐 Unique IP tracking
-- ⚡ Auto-refresh dashboard every 5 seconds
+- 📡 Live Packet Sniffing using Scapy
+- 🔥 Firewall Rule Engine
+- 🗄️ MySQL Log Storage
+- 🌐 Flask REST API
+- 📊 Real-Time Dashboard
+- 📈 Live Traffic Charts
+- 🚨 Live Security Notifications
+- 🤖 AI-Based Threat Level
+- 📜 Recent Firewall Logs
+- 🌍 Unique IP Tracking
+- ⚡ Auto Refresh Dashboard
+- 🛡️ Threat Score Calculation
 
 ---
 
-# 🏗️ Project Architecture
+# 🏗️ System Architecture
 
 ```
-                Network Traffic
+                Internet Traffic
                        │
                        ▼
-             Scapy Packet Sniffer
+               Scapy Packet Sniffer
                        │
                        ▼
               Firewall Rule Engine
                        │
+         ┌─────────────┴─────────────┐
+         │                           │
+         ▼                           ▼
+     Allowed Packet             Blocked Packet
+         │                           │
+         └─────────────┬─────────────┘
                        ▼
-                MySQL Database
+                 MySQL Database
                        │
                        ▼
-                Flask REST API
+                 Flask Backend API
                        │
                        ▼
-           RuShield XDR Dashboard
+            RuShield XDR Dashboard
 ```
 
 ---
@@ -79,17 +92,17 @@ RuShield XDR captures live network packets, applies firewall rules, stores logs 
 # 📂 Project Structure
 
 ```
-Project-firewall/
+Project-firewall
 │
-├── static/
-│   ├── css/
-│   │   └── style.css
+├── static
+│   ├── css
+│   │     └── style.css
 │   │
-│   └── js/
-│       └── dashboard.js
+│   └── js
+│         └── dashboard.js
 │
-├── templates/
-│   └── index.html
+├── templates
+│      └── index.html
 │
 ├── dashboard.py
 ├── database.py
@@ -98,41 +111,43 @@ Project-firewall/
 ├── sniffer.py
 ├── test.py
 │
-├── requirements.txt
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-# ⚙️ How It Works
+# ⚙️ Workflow
 
 ## Step 1
 
-Scapy continuously captures incoming TCP packets.
+Scapy captures network packets in real time.
 
 ↓
 
 ## Step 2
 
-The firewall checks whether the destination port is allowed.
+Firewall rules check destination ports.
 
-Allowed Ports:
+Allowed
 
-- 80 (HTTP)
-- 443 (HTTPS)
+- Port 80
+- Port 443
 
-Any other port is marked as **BLOCKED**.
+Blocked
+
+- Any other port
 
 ↓
 
 ## Step 3
 
-Packet information is stored in MySQL.
+Packet information is saved into MySQL.
 
-Stored fields include:
+Stored Information
 
-- IP Address
-- Port
+- Source IP
+- Destination Port
 - Action
 - Timestamp
 
@@ -140,9 +155,9 @@ Stored fields include:
 
 ## Step 4
 
-Flask reads the logs and provides REST APIs.
+Flask reads the database and exposes APIs.
 
-Available APIs:
+Available APIs
 
 ```
 /
@@ -154,46 +169,46 @@ Dashboard
 /api/logs
 ```
 
-Returns recent firewall logs.
+Recent firewall logs
 
 ```
 /api/stats
 ```
 
-Returns dashboard statistics.
+Dashboard statistics
 
 ↓
 
 ## Step 5
 
-The frontend fetches live data every 5 seconds and updates:
+The frontend automatically refreshes every **5 seconds** and updates
 
 - Threat Score
-- Charts
 - Live Logs
 - AI Status
+- Charts
 - Statistics
 - Notifications
 
 ---
 
-# 📊 Dashboard Features
+# 📊 Dashboard Modules
 
 ## Threat Score
 
-Displays the current network security score based on blocked traffic.
+Displays the current security score calculated from blocked traffic.
 
 ---
 
-## Live Activity
+## Live Activity Feed
 
-Shows the latest firewall events.
+Shows real-time firewall events.
 
 ---
 
-## Firewall Logs
+## Recent Firewall Logs
 
-Displays:
+Displays
 
 - Time
 - IP Address
@@ -202,15 +217,17 @@ Displays:
 
 ---
 
-## AI Threat Analysis
+## AI Threat Engine
 
-Simple rule-based threat analysis.
+Rule-based AI analysis.
 
-Threat Levels:
+Threat Levels
 
-- 🟢 LOW
-- 🟡 MEDIUM
-- 🔴 HIGH
+🟢 LOW
+
+🟡 MEDIUM
+
+🔴 HIGH
 
 ---
 
@@ -223,12 +240,10 @@ Threat Levels:
 
 ## Network Status
 
-Displays:
-
-- Firewall Status
-- Database Status
-- Threat Engine Status
-- Scanner Status
+- Firewall
+- Database
+- Threat Engine
+- Scanner
 
 ---
 
@@ -237,7 +252,7 @@ Displays:
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/RuShield-XDR.git
+git clone https://github.com/YOUR_USERNAME/RuShield-XDR.git
 ```
 
 ```
@@ -251,8 +266,6 @@ cd RuShield-XDR
 ```
 python -m venv .venv
 ```
-
-Activate
 
 Windows
 
@@ -278,13 +291,13 @@ pip install -r requirements.txt
 
 ## Configure MySQL
 
-Create database:
+Create a database named
 
 ```
 firewall_db
 ```
 
-Update credentials inside
+Update your credentials in
 
 ```
 database.py
@@ -298,7 +311,7 @@ database.py
 python dashboard.py
 ```
 
-Open:
+Visit
 
 ```
 http://127.0.0.1:5000
@@ -314,56 +327,80 @@ python sniffer.py
 
 ---
 
-# 📷 Screenshots
+# 📸 Screenshots
 
 ## Dashboard
 
-(Add screenshot)
+> Add your dashboard screenshot here
 
 ---
 
 ## Live Logs
 
-(Add screenshot)
+> Add screenshot
 
 ---
 
 ## Charts
 
-(Add screenshot)
+> Add screenshot
 
 ---
 
-# 🔮 Future Improvements
+# 🔮 Roadmap
 
-- 🌍 Interactive Threat Map
-- 📊 Analytics Dashboard
-- 📄 PDF Report Generation
-- 📧 Email Alerts
-- 🔐 User Authentication
-- 🤖 Machine Learning Threat Detection
-- 🚨 Port Scan Detection
-- 🛡️ Brute Force Detection
-- 📈 Historical Analytics
+- ✅ Live Packet Sniffing
+- ✅ Firewall Rules
+- ✅ MySQL Integration
+- ✅ Dashboard UI
+- ✅ AI Threat Analysis
+- ✅ Live Notifications
+- 🔄 Interactive Threat Map
+- 🔄 Analytics Dashboard
+- 🔄 PDF Report Generator
+- 🔄 Email Alerts
+- 🔄 Login System
+- 🔄 Machine Learning Threat Detection
+
+---
+
+# 💻 Skills Demonstrated
+
+- Python Programming
+- Flask Development
+- REST APIs
+- MySQL Database
+- Network Security
+- Packet Analysis
+- Firewall Development
+- Cybersecurity Dashboard
+- Real-Time Monitoring
+- Frontend Development
 
 ---
 
 # 👨‍💻 Author
 
-**Ashfaq Ahmed M**
+## Ashfaq Ahmed M
 
 Computer Science Engineering Student
 
-Cybersecurity | Python | Network Security | UI/UX
+Cybersecurity Enthusiast | Python Developer | Network Security Learner | UI/UX Designer
 
-GitHub:
-https://github.com/yourusername
+**LinkedIn:** *(Add your profile)*
 
-LinkedIn:
-https://linkedin.com/in/yourprofile
+**GitHub:** *(Add your GitHub profile)*
 
 ---
 
-# 📄 License
+# ⭐ If you like this project
+
+Give this repository a ⭐ on GitHub.
+
+It motivates me to build more cybersecurity projects.
+
+---
+
+# 📜 License
 
 This project is licensed under the MIT License.
