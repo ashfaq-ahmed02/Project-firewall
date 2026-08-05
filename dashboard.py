@@ -4,6 +4,9 @@ from database import get_connection
 app = Flask(__name__)
 
 
+# ===========================
+# Home Page
+# ===========================
 @app.route("/")
 def home():
 
@@ -13,7 +16,12 @@ def home():
     search = request.args.get("search", "")
     action = request.args.get("action", "All Logs")
 
-    query = "SELECT id, ip, port, action, created_at FROM logs WHERE 1=1"
+    query = """
+    SELECT id, ip, port, action, created_at
+    FROM logs
+    WHERE 1=1
+    """
+
     values = []
 
     if search:
@@ -33,9 +41,6 @@ def home():
 
     cursor.execute("SELECT COUNT(*) FROM logs")
     total = cursor.fetchone()[0]
-    
-    cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
-    unique_ips = cursor.fetchone()[0]
 
     cursor.execute("SELECT COUNT(*) FROM logs WHERE action='BLOCKED'")
     blocked = cursor.fetchone()[0]
@@ -43,9 +48,10 @@ def home():
     cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
     allowed = cursor.fetchone()[0]
 
+    cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
+    unique_ips = cursor.fetchone()[0]
 
     # AI Threat Analysis
-
     if blocked < 100:
         ai_level = "LOW"
         ai_status = "Network is Stable"
@@ -75,7 +81,6 @@ def home():
     ORDER BY COUNT(*) DESC
     LIMIT 5
     """)
-
     blocked_ports = cursor.fetchall()
 
     cursor.execute("""
@@ -85,26 +90,31 @@ def home():
     ORDER BY COUNT(*) DESC
     LIMIT 5
     """)
-
     top_ips = cursor.fetchall()
+
     conn.close()
 
     return render_template(
         "index.html",
         logs=logs,
-        top_ips=top_ips,
         total=total,
         blocked=blocked,
         allowed=allowed,
         unique_ips=unique_ips,
         blocked_ports=blocked_ports,
+        top_ips=top_ips,
         blocked_percent=blocked_percent,
-        search=search,
         threat_level=threat_level,
+        ai_status=ai_status,
+        ai_level=ai_level,
+        search=search,
         action=action
     )
-from flask import jsonify
 
+
+# ===========================
+# API - Logs
+# ===========================
 @app.route("/api/logs")
 def api_logs():
 
@@ -115,7 +125,7 @@ def api_logs():
     SELECT id, ip, port, action, created_at
     FROM logs
     ORDER BY id DESC
-    LIMIT 10
+    LIMIT 20
     """)
 
     logs = cursor.fetchall()
@@ -125,7 +135,6 @@ def api_logs():
     data = []
 
     for log in logs:
-
         data.append({
             "id": log[0],
             "ip": log[1],
@@ -136,100 +145,73 @@ def api_logs():
 
     return jsonify(data)
 
+
+# ===========================
+# API - Dashboard Stats
+# ===========================
+@app.route("/api/stats")
+def api_stats():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM logs")
+    total = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM logs WHERE action='BLOCKED'")
+    blocked = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
+    allowed = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
+    unique_ips = cursor.fetchone()[0]
+
+    # AI Threat Analysis
+    if blocked < 100:
+        ai_level = "LOW"
+        ai_status = "Network is Stable"
+
+    elif blocked < 1000:
+        ai_level = "MEDIUM"
+        ai_status = "Suspicious Activity Detected"
+
+    else:
+        ai_level = "HIGH"
+        ai_status = "Possible Attack Detected"
+
+    cursor.execute("""
+    SELECT action, COUNT(*)
+    FROM logs
+    GROUP BY action
+    """)
+    chart_data = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT ip, COUNT(*)
+    FROM logs
+    GROUP BY ip
+    ORDER BY COUNT(*) DESC
+    LIMIT 5
+    """)
+    top_attackers = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "total": total,
+        "blocked": blocked,
+        "allowed": allowed,
+        "unique_ips": unique_ips,
+        "ai_status": ai_status,
+        "ai_level": ai_level,
+        "chart_data": chart_data,
+        "top_attackers": top_attackers
+    })
+
+
+# ===========================
+# Run App
+# ===========================
 if __name__ == "__main__":
-    @app.route("/api/stats")
-    def api_stats():
-
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT COUNT(*) FROM logs")
-        total = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(*) FROM logs WHERE action='BLOCKED'")
-        blocked = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(*) FROM logs WHERE action='ALLOWED'")
-        allowed = cursor.fetchone()[0]
-
-        # AI Threat Analysis
-        if blocked < 100:
-            ai_level = "LOW"
-            ai_status = "Network is Stable"
-
-        elif blocked < 1000:
-            ai_level = "MEDIUM"
-            ai_status = "Suspicious Activity Detected"
-
-        else:
-            ai_level = "HIGH"
-            ai_status = "Possible Attack Detected"
-
-        cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
-        unique_ips = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(DISTINCT ip) FROM logs")
-        unique_ips = cursor.fetchone()[0]
-
-
-        cursor.execute("""
-        SELECT action, COUNT(*)
-        FROM logs
-        GROUP BY action
-        """)
-
-        chart_data = cursor.fetchall()
-        conn.close()
-
-        cursor.execute("""
-        SELECT ip, COUNT(*)
-        FROM logs
-        GROUP BY ip
-        ORDER BY COUNT(*) DESC
-        LIMIT 5
-        """)
-
-        top_attackers = cursor.fetchall()
-        return jsonify({
-            "total": total,
-            "blocked": blocked,
-            "allowed": allowed,
-            "unique_ips": unique_ips,
-            "ai_status": ai_status,
-            "ai_level": ai_level,
-            "chart_data": chart_data
-            "top_attackers": top_attackers
-        })
-
     app.run(debug=True)
-
-
-    @app.route("/api/logs")
-    def api_logs():
-
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT id, ip, port, action, time
-            FROM logs
-            ORDER BY id DESC
-            LIMIT 10
-        """)
-
-        logs = cursor.fetchall()
-        conn.close()
-
-        data = []
-
-        for log in logs:
-            data.append({
-                "id": log[0],
-                "ip": log[1],
-                "port": log[2],
-                "action": log[3],
-                "time": log[4]
-            })
-
-        return jsonify(data)
-
