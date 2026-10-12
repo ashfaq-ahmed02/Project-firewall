@@ -1,19 +1,11 @@
-from database import get_connection
-
+import datetime
+from database import query_db
 
 def save_log(ip, port, action):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = """
-    INSERT INTO logs(ip, port, action)
-    VALUES(%s, %s, %s)
+    INSERT INTO logs(ip, port, action, created_at)
+    VALUES(%s, %s, %s, %s)
     """
-
-    cursor.execute(sql, (ip, port, action))
-
-    conn.commit()
-    conn.close()
-
+    query_db(sql, (ip, port, action, timestamp), commit=True)
     print(f"Saved -> {ip}:{port} ({action})")

@@ -1,540 +1,749 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuShield XDR - Next-Gen Firewall & Threat Detection</title>
 
-    <title>RuShield XDR</title>
-
-    <!-- Google Font -->
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-    <!-- CSS -->
-
-    <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/style.css') }}">
-
-    <link rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
+    <!-- App Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body>
-
-<div class="app">
+<body class="soc-theme">
+<div class="app-container">
 
     <!-- ================= SIDEBAR ================= -->
-
     <aside class="sidebar">
-
-        <div class="logo">
-
-            <div class="logo-icon">
+        <div class="brand">
+            <div class="brand-shield">
                 <i class="fa-solid fa-shield-halved"></i>
+                <span class="shield-pulse"></span>
             </div>
-
-            <div>
-
-                <h2>RuShield</h2>
-
-                <p>XDR Platform</p>
-
+            <div class="brand-info">
+                <h2>RuShield <span class="tag-xdr">XDR</span></h2>
+                <p>SOC Telemetry Platform</p>
             </div>
-
         </div>
 
-        <ul class="menu">
+        <nav class="nav-menu">
+            <p class="nav-section-title">COMMAND CENTER</p>
+            <ul>
+                <li class="nav-item active" data-tab="tab-overview">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <span>Overview</span>
+                    <span class="nav-badge" id="nav-badge-status">LIVE</span>
+                </li>
+                <li class="nav-item" data-tab="tab-analytics">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Analytics</span>
+                </li>
+                <li class="nav-item" data-tab="tab-logs">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>Packet Inspector</span>
+                    <span class="nav-counter" id="nav-log-count">{{ total }}</span>
+                </li>
+                <li class="nav-item" data-tab="tab-rules">
+                    <i class="fa-solid fa-filter"></i>
+                    <span>Firewall Rules</span>
+                </li>
+                <li class="nav-item" data-tab="tab-radar">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <span>Threat Radar</span>
+                </li>
+                <li class="nav-item" data-tab="tab-simulator">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Attack Simulator</span>
+                </li>
+            </ul>
+        </nav>
 
-            <li class="active">
-
-                <i class="fa-solid fa-table-columns"></i>
-
-                <span>Dashboard</span>
-
-            </li>
-
-            <li>
-
-                <i class="fa-solid fa-chart-line"></i>
-
-                <span>Analytics</span>
-
-            </li>
-
-            <li>
-
-                <i class="fa-solid fa-network-wired"></i>
-
-                <span>Live Logs</span>
-
-            </li>
-
-            <li>
-
-                <i class="fa-solid fa-shield"></i>
-
-                <span>Firewall</span>
-
-            </li>
-
-            <li>
-
-                <i class="fa-solid fa-bell"></i>
-
-                <span>Alerts</span>
-
-            </li>
-
-            <li>
-
-                <i class="fa-solid fa-gear"></i>
-
-                <span>Settings</span>
-
-            </li>
-
-        </ul>
-
-        <div class="profile">
-
-            <img src="https://i.pravatar.cc/100?img=12">
-
-            <div>
-
-                <h4>Admin</h4>
-
-                <p>Security Analyst</p>
-
+        <!-- SOC Engine Health Box -->
+        <div class="sidebar-system-card">
+            <div class="sys-header">
+                <span class="sys-dot online"></span>
+                <h4>Engine Status</h4>
             </div>
-
+            <div class="sys-row">
+                <span>Database:</span>
+                <strong id="sidebar-db-type">{{ db_type }}</strong>
+            </div>
+            <div class="sys-row">
+                <span>Filter Engine:</span>
+                <strong class="text-success">Active</strong>
+            </div>
+            <div class="sys-row">
+                <span>Alert Audio:</span>
+                <button id="toggleAudioBtn" class="audio-toggle-btn" title="Toggle audio alert sound">
+                    <i class="fa-solid fa-volume-high"></i> <span id="audioStatusText">ON</span>
+                </button>
+            </div>
         </div>
 
+        <!-- SecOps Profile -->
+        <div class="analyst-profile">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Analyst Avatar">
+            <div class="analyst-details">
+                <h4>SecOps Analyst</h4>
+                <p><span class="online-dot"></span> Duty Active</p>
+            </div>
+            <i class="fa-solid fa-shield-virus profile-icon"></i>
+        </div>
     </aside>
 
-    <!-- ================= MAIN ================= -->
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
 
-    <main class="main">
-<!-- Top Navigation -->
-
-<div class="topbar">
-
-    <div class="top-left">
-
-        <h1>RuShield XDR Dashboard</h1>
-
-        <p>Real-Time Network Monitoring & Threat Detection</p>
-
-    </div>
-
-    <div class="top-right">
-
-        <div class="search">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input type="text" placeholder="Search...">
-
-        </div>
-
-        <button class="icon-btn">
-
-            <i class="fa-solid fa-bell"></i>
-
-        </button>
-
-        <div class="admin">
-
-            <img src="https://i.pravatar.cc/100?img=12">
-
-            <div>
-
-                <h4>Administrator</h4>
-
-                <span>Online</span>
-
+        <!-- Topbar Navigation -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="view-header">
+                    <h1 id="viewTitle">Security Operations Center</h1>
+                    <div class="breadcrumbs">
+                        <span>RuShield</span> &gt; <span id="viewBreadcrumb">Perimeter Telemetry</span>
+                    </div>
+                </div>
             </div>
 
-        </div>
-
-    </div>
-<!-- Security Alerts -->
-
-<div class="card alerts-card">
-
-    <div class="card-header">
-
-        <h3>Recent Security Alerts</h3>
-
-    </div>
-
-    <div class="alert-item critical">
-
-        <span class="alert-dot"></span>
-
-        <div>
-
-            <h4>Critical Port Scan</h4>
-
-            <p>Detected from 192.168.1.15</p>
-
-        </div>
-
-    </div>
-
-    <div class="alert-item warning">
-
-        <span class="alert-dot"></span>
-
-        <div>
-
-            <h4>Multiple Login Attempts</h4>
-
-            <p>5 failed logins detected</p>
-
-        </div>
-
-    </div>
-
-    <div class="alert-item safe">
-
-        <span class="alert-dot"></span>
-
-        <div>
-
-            <h4>Firewall Updated</h4>
-
-            <p>Security rules refreshed successfully</p>
-
-        </div>
-
-    </div>
-
-</div>
-</div>
-        <!-- Topbar -->
-
-
-                <!-- ================= HERO GRID ================= -->
-
-        <section class="hero-grid">
-
-            <!-- Threat Score -->
-
-            <div class="card threat-card">
-
-                <div class="card-header">
-
-                    <h3>Threat Score</h3>
-
-                    <span class="status live">LIVE</span>
-
+            <div class="topbar-right">
+                <!-- Live Clock -->
+                <div class="clock-badge">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="liveClock">--:--:-- UTC</span>
                 </div>
 
-                <div class="gauge">
+                <!-- Auto-Refresh Controls -->
+                <div class="refresh-control">
+                    <i class="fa-solid fa-rotate"></i>
+                    <select id="refreshIntervalSelect">
+                        <option value="3000">3s Live</option>
+                        <option value="5000" selected>5s Refresh</option>
+                        <option value="10000">10s Refresh</option>
+                        <option value="0">Paused</option>
+                    </select>
+                </div>
 
-                    <div class="gauge-circle">
+                <!-- Quick Simulator Trigger -->
+                <button class="btn btn-cyber-primary" id="quickSimulateBtn">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Quick Probe</span>
+                </button>
 
-                        <div class="gauge-inner">
+                <!-- Live Status Beacon -->
+                <div class="live-beacon">
+                    <span class="beacon-pulse"></span>
+                    <span>MONITORING</span>
+                </div>
+            </div>
+        </header>
 
-                            <h1 id="threatScore">{{ blocked_percent }}%</h1>
-
-                            <p id="threatStatus">Secure</p>
-
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <div class="tab-pane active" id="tab-overview">
+            
+            <!-- 4 Metric Cards -->
+            <section class="metrics-grid">
+                <div class="metric-card card-total">
+                    <div class="metric-header">
+                        <span class="metric-title">TOTAL PACKETS</span>
+                        <div class="metric-icon-box total-box">
+                            <i class="fa-solid fa-database"></i>
                         </div>
-
                     </div>
-
+                    <div class="metric-body">
+                        <h2 id="totalLogs">{{ total }}</h2>
+                        <span class="metric-subtext"><i class="fa-solid fa-arrow-trend-up"></i> Real-time ingress</span>
+                    </div>
                 </div>
 
-                <div class="gauge-footer">
-
-                    <div>
-
-                        <h4>{{ blocked }}</h4>
-
-                        <p>Blocked</p>
-
+                <div class="metric-card card-allowed">
+                    <div class="metric-header">
+                        <span class="metric-title">ALLOWED TRAFFIC</span>
+                        <div class="metric-icon-box allowed-box">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
                     </div>
-
-                    <div>
-
-                        <h4>{{ allowed }}</h4>
-
-                        <p>Allowed</p>
-
+                    <div class="metric-body">
+                        <h2 id="allowedLogs" class="text-success">{{ allowed }}</h2>
+                        <span class="metric-subtext text-success"><i class="fa-solid fa-check"></i> Clean requests</span>
                     </div>
-
-                    <div>
-
-                        <h4>{{ total }}</h4>
-
-                        <p>Total</p>
-
-                    </div>
-
                 </div>
 
-            </div>
-
-            <!-- Live Feed -->
-
-            <div class="card feed-card">
-
-                <div class="card-header">
-
-                    <h3>Live Activity</h3>
-
+                <div class="metric-card card-blocked">
+                    <div class="metric-header">
+                        <span class="metric-title">BLOCKED THREATS</span>
+                        <div class="metric-icon-box blocked-box">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="blockedLogs" class="text-danger">{{ blocked }}</h2>
+                        <span class="metric-subtext text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Drop policies enforced</span>
+                    </div>
                 </div>
 
-                <div class="feed" id="liveFeed">
-</div>
-            </div>
-
-        </section>
-
-        <!-- ================= SUMMARY ================= -->
-
-        <section class="summary-grid">
-
-            <div class="summary-card">
-
-                <i class="fa-solid fa-database"></i>
-
-               <h2 id="totalLogs">{{ total }}</h2>
-
-                <p>Total Logs</p>
-
-            </div>
-
-            <div class="summary-card">
-
-                <i class="fa-solid fa-circle-check"></i>
-
-               <h2 id="allowedLogs">{{ allowed }}</h2>
-
-                <p>Allowed</p>
-
-            </div>
-
-            <div class="summary-card">
-
-                <i class="fa-solid fa-ban"></i>
-
-               <h2 id="blockedLogs">{{ blocked }}</h2>
-
-                <p>Blocked</p>
-
-            </div>
-
-            <div class="summary-card">
-
-                <i class="fa-solid fa-network-wired"></i>
-
-                <h2 id="uniqueIPs">{{ unique_ips }}</h2>
-
-                <p>Unique IPs</p>
-
-            </div>
-
-        </section>
-
-                <!-- ================= BOTTOM GRID ================= -->
-
-        <section class="bottom-grid">
-
-            <!-- Recent Firewall Logs -->
-
-            <div class="card logs-card">
-
-                <div class="card-header">
-
-                    <h3>Recent Firewall Logs</h3>
-
-                    <a href="#">View All</a>
-
+                <div class="metric-card card-ips">
+                    <div class="metric-header">
+                        <span class="metric-title">UNIQUE HOSTS</span>
+                        <div class="metric-icon-box ips-box">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="uniqueIPs" class="text-warning">{{ unique_ips }}</h2>
+                        <span class="metric-subtext text-warning"><i class="fa-solid fa-globe"></i> Tracked source endpoints</span>
+                    </div>
                 </div>
+            </section>
 
-                <table class="logs-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Time</th>
-                            <th>IP Address</th>
-                            <th>Port</th>
-                            <th>Status</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="logs-body">
-
-{% for log in logs[:5] %}
-
-<tr>
-    <td>{{ log[4] }}</td>
-    <td>{{ log[1] }}</td>
-    <td>{{ log[2] }}</td>
-
-    <td>
-        {% if log[3] == "BLOCKED" %}
-            <span class="badge blocked">BLOCKED</span>
-        {% else %}
-            <span class="badge allowed">ALLOWED</span>
-        {% endif %}
-    </td>
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-            </div>
-
-            <!-- Right Side -->
-
-            <div class="right-panel">
-
-                <!-- AI Insights -->
-
-                <div class="card ai-card">
-
+            <!-- Middle Row: Threat Gauge, AI Insights, Live Stream -->
+            <section class="overview-middle-grid">
+                
+                <!-- Dynamic Threat Score Card -->
+                <div class="card glass-card threat-gauge-card">
                     <div class="card-header">
-
-                        <h3>AI Insights</h3>
-
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-gauge-high card-icon"></i>
+                            <h3>Threat Risk Score</h3>
+                        </div>
+                        <span class="threat-level-badge" id="threatLevelBadge">{{ threat_level }}</span>
                     </div>
-
-<ul id="aiInsights">
-
-    <li>🤖 Loading AI Analysis...</li>
-
-</ul>
+                    <div class="threat-gauge-content">
+                        <!-- High Tech SVG Radial Progress -->
+                        <div class="svg-gauge-wrapper">
+                            <svg class="radial-gauge-svg" viewBox="0 0 160 160">
+                                <circle class="gauge-bg" cx="80" cy="80" r="70" />
+                                <circle class="gauge-bar" id="gaugeProgressCircle" cx="80" cy="80" r="70" />
+                            </svg>
+                            <div class="gauge-center-text">
+                                <h1 id="threatScore">{{ blocked_percent }}%</h1>
+                                <span class="gauge-label" id="threatStatusText">{{ threat_level }}</span>
+                            </div>
+                        </div>
+                        <div class="threat-breakdown">
+                            <div class="breakdown-item">
+                                <span class="dot-indicator dot-red"></span>
+                                <div>
+                                    <p>Blocked Ratio</p>
+                                    <strong id="blockedRatioText">{{ blocked_percent }}%</strong>
+                                </div>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="dot-indicator dot-green"></span>
+                                <div>
+                                    <p>Allowed Ratio</p>
+                                    <strong id="allowedRatioText">--%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Network Status -->
-                <section class="card map-card">
-
-    <div class="card-header">
-
-        <h3>Global Threat Map</h3>
-
-        <span class="live-status">
-            ● LIVE
-        </span>
-
-    </div>
-
-    <div id="attackMap"></div>
-
-</section>
-
-                <div class="card network-card">
-
+                <!-- AI Defense Insights -->
+                <div class="card glass-card ai-insights-card">
                     <div class="card-header">
-
-                        <h3>Network Status</h3>
-
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-brain-circuit card-icon text-cyan"></i>
+                            <h3>AI Threat Diagnostics</h3>
+                        </div>
+                        <span class="ai-status-pill" id="aiStatusPill">{{ ai_level }}</span>
                     </div>
-
-                    <div class="network-item">
-
-                        <span>Firewall</span>
-
-                        <strong class="online">Online</strong>
-
+                    <div class="ai-insights-body">
+                        <div class="ai-callout">
+                            <div class="ai-icon-circle">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="ai-text">
+                                <h4 id="aiMainStatus">{{ ai_status }}</h4>
+                                <p id="aiRecommendation">Automated packet inspection scanning inbound vectors continuously.</p>
+                            </div>
+                        </div>
+                        <div class="ai-metrics-list">
+                            <div class="ai-metric-row">
+                                <span><i class="fa-solid fa-shield-virus"></i> Ingress Anomaly Score</span>
+                                <strong id="anomalyScoreText">Normal</strong>
+                            </div>
+                            <div class="ai-metric-row">
+                                <span><i class="fa-solid fa-crosshairs"></i> Dominant Target Port</span>
+                                <strong id="dominantPortText">Port 22 (SSH)</strong>
+                            </div>
+                            <div class="ai-metric-row">
+                                <span><i class="fa-solid fa-microchip"></i> Policy Evaluation</span>
+                                <strong class="text-success">Optimal (0.4ms)</strong>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="network-item">
-
-                        <span>Database</span>
-
-                        <strong class="online">Connected</strong>
-
-                    </div>
-
-                    <div class="network-item">
-
-                        <span>Threat Engine</span>
-
-                        <strong class="warning">Monitoring</strong>
-
-                    </div>
-
-                    <div class="network-item">
-
-                        <span>Live Scanner</span>
-
-                        <strong class="online">Running</strong>
-
-                    </div>
-
                 </div>
 
+                <!-- Live Packet Stream Feed -->
+                <div class="card glass-card live-feed-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-wave-pulse card-icon text-emerald"></i>
+                            <h3>Live Packet Stream</h3>
+                        </div>
+                        <span class="badge-live-pulse">LIVE FEED</span>
+                    </div>
+                    <div class="live-feed-list" id="liveFeedContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lower Grid: Threat Radar & Charts -->
+            <section class="overview-lower-grid">
+                
+                <!-- Interactive Dark Threat Map -->
+                <div class="card glass-card map-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-location-crosshairs card-icon text-cyan"></i>
+                            <h3>Global Threat Geolocation Radar</h3>
+                        </div>
+                        <div class="map-actions">
+                            <span class="map-legend"><span class="legend-dot red"></span> Blocked</span>
+                            <span class="map-legend"><span class="legend-dot green"></span> Allowed</span>
+                            <button class="btn btn-sm btn-outline" id="centerMapBtn" title="Reset map view">
+                                <i class="fa-solid fa-compress"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="attackMap" class="threat-leaflet-map"></div>
+                </div>
+
+                <!-- Charts Side Panel -->
+                <div class="charts-stack">
+                    <!-- Doughnut Distribution Chart -->
+                    <div class="card glass-card chart-card-compact">
+                        <div class="card-header">
+                            <div class="header-title-group">
+                                <i class="fa-solid fa-chart-pie card-icon"></i>
+                                <h3>Traffic Composition</h3>
+                            </div>
+                        </div>
+                        <div class="chart-container-compact">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Targeted Ports Bar Chart -->
+                    <div class="card glass-card chart-card-compact">
+                        <div class="card-header">
+                            <div class="header-title-group">
+                                <i class="fa-solid fa-bars-progress card-icon"></i>
+                                <h3>Targeted Ports (Top 5)</h3>
+                            </div>
+                        </div>
+                        <div class="chart-container-compact">
+                            <canvas id="portsBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Table: Recent Firewall Activity -->
+            <section class="recent-logs-section">
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-list-check card-icon text-cyan"></i>
+                            <h3>Recent Firewall Ingress Activity</h3>
+                        </div>
+                        <div class="card-header-actions">
+                            <button class="btn btn-sm btn-outline view-all-logs-btn" data-tab="tab-logs">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Inspector
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Source IP</th>
+                                    <th>Destination Port</th>
+                                    <th>Service</th>
+                                    <th>Action</th>
+                                    <th>Quick Rule</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overviewLogsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ================= TAB 2: ANALYTICS ================= -->
+        <div class="tab-pane" id="tab-analytics">
+            <div class="tab-header-strip">
+                <div>
+                    <h2>Network Traffic & Threat Analytics</h2>
+                    <p>In-depth packet telemetry, attack vector analysis, and threat origins.</p>
+                </div>
             </div>
 
-        </section>
+            <div class="analytics-grid">
+                <!-- Large Traffic Trend Line Chart -->
+                <div class="card glass-card full-width-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-chart-area card-icon text-cyan"></i>
+                            <h3>Traffic Velocity & Volume (Time-Series)</h3>
+                        </div>
+                        <span class="badge-tag">24-Hour Horizon</span>
+                    </div>
+                    <div class="chart-container-large">
+                        <canvas id="analyticsTrendChart"></canvas>
+                    </div>
+                </div>
 
-     <section class="chart-section">
+                <!-- Top Attackers Table -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-skull-crossbones card-icon text-danger"></i>
+                            <h3>Top Threat Origin IPs</h3>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Attacker IP</th>
+                                    <th>Origin</th>
+                                    <th>Blocked Hits</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topAttackersTableBody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <!-- Network Traffic -->
-    <div class="card chart-card">
-
-        <div class="card-header">
-            <h3>Network Traffic Analysis</h3>
+                <!-- Port Security Distribution -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <i class="fa-solid fa-shield-virus card-icon text-warning"></i>
+                            <h3>Port Exposure Risk Analysis</h3>
+                        </div>
+                    </div>
+                    <div class="chart-container-compact">
+                        <canvas id="attackDistChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <canvas id="trafficChart"></canvas>
+        <!-- ================= TAB 3: PACKET INSPECTOR (LOGS) ================= -->
+        <div class="tab-pane" id="tab-logs">
+            <div class="tab-header-strip">
+                <div>
+                    <h2>Firewall Packet Inspector & Forensics</h2>
+                    <p>Search, filter, audit, and export raw firewall decision logs.</p>
+                </div>
+                <div class="tab-actions">
+                    <button class="btn btn-outline" id="exportLogsBtn">
+                        <i class="fa-solid fa-file-arrow-down"></i> Export CSV
+                    </button>
+                    <button class="btn btn-danger-outline" id="clearLogsBtn">
+                        <i class="fa-solid fa-trash-can"></i> Clear Logs
+                    </button>
+                </div>
+            </div>
 
-    </div>
+            <!-- Filter Controls Bar -->
+            <div class="card glass-card logs-toolbar">
+                <div class="search-input-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="logSearchInput" placeholder="Filter by IP address or destination port...">
+                </div>
 
-    <!-- Attack Distribution -->
-    <div class="card pie-card">
+                <div class="filter-pills-group">
+                    <button class="filter-pill active" data-action="ALL">All Packets</button>
+                    <button class="filter-pill filter-pill-blocked" data-action="BLOCKED">
+                        <span class="pill-dot red"></span> Blocked Only
+                    </button>
+                    <button class="filter-pill filter-pill-allowed" data-action="ALLOWED">
+                        <span class="pill-dot green"></span> Allowed Only
+                    </button>
+                </div>
 
-        <div class="card-header">
-            <h3>Attack Distribution</h3>
+                <div class="limit-selector">
+                    <span>Show:</span>
+                    <select id="logLimitSelect">
+                        <option value="25" selected>25 Rows</option>
+                        <option value="50">50 Rows</option>
+                        <option value="100">100 Rows</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Full Logs Table -->
+            <div class="card glass-card">
+                <div class="table-responsive">
+                    <table class="cyber-table full-logs-table">
+                        <thead>
+                            <tr>
+                                <th># ID</th>
+                                <th>Timestamp</th>
+                                <th>Source IP Address</th>
+                                <th>Port</th>
+                                <th>Protocol / Service</th>
+                                <th>Verdict</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fullLogsTableBody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <canvas id="attackChart"></canvas>
+        <!-- ================= TAB 4: FIREWALL RULES ================= -->
+        <div class="tab-pane" id="tab-rules">
+            <div class="tab-header-strip">
+                <div>
+                    <h2>Firewall Filtering Rule Engine</h2>
+                    <p>Configure dynamic port filtering and host blocklists applied by the rule engine.</p>
+                </div>
+                <button class="btn btn-cyber-primary" id="openAddRuleModalBtn">
+                    <i class="fa-solid fa-plus"></i> Add Firewall Rule
+                </button>
+            </div>
 
-    </div>
+            <!-- Rules Summary Row -->
+            <div class="rules-summary-grid">
+                <div class="card glass-card mini-rule-card">
+                    <span class="mini-rule-label">ACTIVE RULES</span>
+                    <h3 id="activeRulesCount">{{ rules_count }}</h3>
+                    <p>Enforced in engine</p>
+                </div>
+                <div class="card glass-card mini-rule-card">
+                    <span class="mini-rule-label">DEFAULT PORT POLICY</span>
+                    <h3 class="text-danger">DROP / BLOCK</h3>
+                    <p>All undefined ports blocked</p>
+                </div>
+                <div class="card glass-card mini-rule-card">
+                    <span class="mini-rule-label">STANDARD PORTS</span>
+                    <h3 class="text-success">80 / 443</h3>
+                    <p>Allowed HTTP / HTTPS</p>
+                </div>
+                <div class="card glass-card mini-rule-card">
+                    <span class="mini-rule-label">DATABASE SYNC</span>
+                    <h3 class="text-cyan">REAL-TIME</h3>
+                    <p>Immediate engine hot-reload</p>
+                </div>
+            </div>
 
-</section>
-
-    <div class="card pie-card">
-
-        <div class="card-header">
-            <h3>Attack Distribution</h3>
+            <!-- Rules Table -->
+            <div class="card glass-card">
+                <div class="card-header">
+                    <div class="header-title-group">
+                        <i class="fa-solid fa-shield-halved card-icon text-cyan"></i>
+                        <h3>Active Policy Configuration</h3>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="cyber-table rules-table">
+                        <thead>
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>Type</th>
+                                <th>Target Value</th>
+                                <th>Verdict Policy</th>
+                                <th>Rule Description</th>
+                                <th>Created</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rulesTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <canvas id="attackChart"></canvas>
+        <!-- ================= TAB 5: THREAT RADAR FULL ================= -->
+        <div class="tab-pane" id="tab-radar">
+            <div class="tab-header-strip">
+                <div>
+                    <h2>Global Threat Radar & Origin Telemetry</h2>
+                    <p>Full-screen planetary geolocation of inbound attack probes and clean sessions.</p>
+                </div>
+            </div>
 
-    </div>
+            <div class="card glass-card full-radar-card">
+                <div id="fullAttackMap" class="threat-leaflet-map-full"></div>
+            </div>
+        </div>
 
-</section>
+        <!-- ================= TAB 6: ATTACK SIMULATOR ================= -->
+        <div class="tab-pane" id="tab-simulator">
+            <div class="tab-header-strip">
+                <div>
+                    <h2>Interactive Attack & Traffic Simulator</h2>
+                    <p>Inject simulated penetration tests, scans, and normal user requests to test real-time rules.</p>
+                </div>
+            </div>
+
+            <div class="simulator-grid">
+                <!-- Preset 1: Nmap Port Scan -->
+                <div class="card glass-card sim-card">
+                    <div class="sim-card-header">
+                        <div class="sim-icon-box danger">
+                            <i class="fa-solid fa-radar"></i>
+                        </div>
+                        <div>
+                            <h3>Nmap Multi-Port Recon</h3>
+                            <p>Probes ports 21, 22, 23, 25, 3389, 8080</p>
+                        </div>
+                    </div>
+                    <p class="sim-desc">Simulates an automated external adversary scanning open attack surfaces across common administrative ports.</p>
+                    <button class="btn btn-danger-outline run-sim-btn" data-type="port_scan">
+                        <i class="fa-solid fa-play"></i> Execute Port Scan Probe
+                    </button>
+                </div>
+
+                <!-- Preset 2: SSH Brute Force -->
+                <div class="card glass-card sim-card">
+                    <div class="sim-card-header">
+                        <div class="sim-icon-box danger">
+                            <i class="fa-solid fa-terminal"></i>
+                        </div>
+                        <div>
+                            <h3>SSH Brute-Force Burst</h3>
+                            <p>High-frequency Port 22 connections</p>
+                        </div>
+                    </div>
+                    <p class="sim-desc">Fires multiple unauthorized connection handshakes against Port 22 from a rogue external IP.</p>
+                    <button class="btn btn-danger-outline run-sim-btn" data-type="ssh_brute">
+                        <i class="fa-solid fa-play"></i> Launch SSH Infiltration Wave
+                    </button>
+                </div>
+
+                <!-- Preset 3: Normal Web Traffic -->
+                <div class="card glass-card sim-card">
+                    <div class="sim-card-header">
+                        <div class="sim-icon-box success">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div>
+                            <h3>Normal Web Traffic</h3>
+                            <p>Clean HTTP / HTTPS (Ports 80 &amp; 443)</p>
+                        </div>
+                    </div>
+                    <p class="sim-desc">Generates legitimate user requests over standard web ports to test allowed rule paths.</p>
+                    <button class="btn btn-success-outline run-sim-btn" data-type="normal_web">
+                        <i class="fa-solid fa-play"></i> Send Clean Web Packets
+                    </button>
+                </div>
+
+                <!-- Preset 4: Custom Packet Injection -->
+                <div class="card glass-card sim-card custom-sim-card">
+                    <div class="sim-card-header">
+                        <div class="sim-icon-box warning">
+                            <i class="fa-solid fa-syringe"></i>
+                        </div>
+                        <div>
+                            <h3>Custom Packet Injection</h3>
+                            <p>Specify arbitrary IP and destination port</p>
+                        </div>
+                    </div>
+                    <div class="custom-sim-form">
+                        <div class="form-group-row">
+                            <input type="text" id="customSimIP" class="cyber-input" placeholder="IP e.g. 192.168.1.99" value="192.168.1.99">
+                            <input type="number" id="customSimPort" class="cyber-input" placeholder="Port e.g. 8080" value="8080">
+                        </div>
+                        <button class="btn btn-cyber-primary" id="sendCustomSimBtn">
+                            <i class="fa-solid fa-paper-plane"></i> Inject Packet
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulator Live Terminal / Console -->
+            <div class="card glass-card console-card">
+                <div class="card-header">
+                    <div class="header-title-group">
+                        <i class="fa-solid fa-terminal card-icon text-cyan"></i>
+                        <h3>Simulator Execution Terminal</h3>
+                    </div>
+                    <button class="btn btn-sm btn-outline" id="clearConsoleBtn">Clear Console</button>
+                </div>
+                <div class="sim-console" id="simConsole">
+                    <div class="console-line text-muted">[System] RuShield XDR Simulator Ready. Select a scenario above to test.</div>
+                </div>
+            </div>
+        </div>
+
     </main>
-
 </div>
-<div id="toastContainer"></div>
-<!-- Chart.js -->
+
+<!-- ================= ADD RULE MODAL ================= -->
+<div class="modal-backdrop" id="addRuleModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-shield-plus text-cyan"></i> Create Firewall Rule</h3>
+            <button class="modal-close-btn" id="closeAddRuleModalBtn">&times;</button>
+        </div>
+        <form id="addRuleForm">
+            <div class="form-group">
+                <label>Rule Category</label>
+                <select id="ruleTypeSelect" class="cyber-input">
+                    <option value="PORT">Port Filter (Destination Port)</option>
+                    <option value="IP">IP Blocklist (Source IP)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Target Identifier</label>
+                <input type="text" id="ruleTargetInput" class="cyber-input" placeholder="Port (e.g. 21) or IP (e.g. 198.51.100.24)" required>
+            </div>
+            <div class="form-group">
+                <label>Firewall Verdict</label>
+                <select id="ruleActionSelect" class="cyber-input">
+                    <option value="BLOCKED">BLOCKED (Drop Packet)</option>
+                    <option value="ALLOWED">ALLOWED (Permit Packet)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description / Reason</label>
+                <input type="text" id="ruleDescInput" class="cyber-input" placeholder="e.g. Block vulnerable Telnet port">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelAddRuleModalBtn">Cancel</button>
+                <button type="submit" class="btn btn-cyber-primary">Deploy Policy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Toasts Container -->
+<div id="toastContainer" class="toast-hub"></div>
+
+<!-- External Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-<div id="toast-container"></div>
-</body>
 
+<!-- App Controller -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
 </html>

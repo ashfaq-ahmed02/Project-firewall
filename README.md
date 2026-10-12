@@ -21,17 +21,18 @@ The project demonstrates the fundamentals of **Network Security**, **Firewall De
 # ✨ Features
 
 - 📡 Live Packet Sniffing using Scapy
-- 🔥 Firewall Rule Engine
-- 🗄️ MySQL Log Storage
-- 🌐 Flask REST API
-- 📊 Real-Time Dashboard
-- 📈 Live Traffic Charts
-- 🚨 Live Security Notifications
-- 🤖 AI-Based Threat Level
-- 📜 Recent Firewall Logs
-- 🌍 Unique IP Tracking
-- ⚡ Auto Refresh Dashboard
-- 🛡️ Threat Score Calculation
+- 🔥 Dynamic Firewall Rule Engine (Port Filtering & IP Blacklisting)
+- 🗄️ Dual Database Architecture: SQLite (Instant zero-config) & MySQL
+- 🌐 Robust Flask REST API (Stats, Logs, Rules, GeoIP, Simulator, CSV Export)
+- 🖥️ Next-Gen Cyber SOC Command Center (Dark Glassmorphic UI)
+- 📈 Live Traffic Telemetry & Time-Series Charts (Chart.js)
+- 🌍 Interactive Dark Threat Geolocation Radar (Leaflet & CartoDB)
+- 🚨 Real-Time Security Notifications with Cyber Sound Alerts (Web Audio API)
+- 🎯 Dynamic SVG Radial Threat Score Gauge
+- 🤖 Automated AI Heuristic Threat Diagnostics
+- 📜 Deep Packet Forensics (Search, Filter by Verdict, CSV Download)
+- ⚡ Live Penetration Testing & Traffic Simulator (Port Scan, SSH Brute Force, Web Traffic)
+- 🛡️ Interactive Rule Management Modal (Deploy & delete rules on the fly)
 
 ---
 
