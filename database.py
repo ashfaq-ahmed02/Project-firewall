@@ -1,10 +1,22 @@
 import os
+import shutil
 import sqlite3
 import datetime
 from datetime import timedelta
 import random
 
-DB_FILE = os.path.join(os.path.dirname(__file__), "firewall_logs.db")
+# On Vercel, the app directory is read-only. Copy to /tmp/firewall_logs.db on startup.
+ORIGINAL_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "firewall_logs.db")
+if os.environ.get("VERCEL"):
+    DB_FILE = "/tmp/firewall_logs.db"
+    if not os.path.exists(DB_FILE) and os.path.exists(ORIGINAL_DB):
+        try:
+            shutil.copyfile(ORIGINAL_DB, DB_FILE)
+        except Exception:
+            pass
+else:
+    DB_FILE = ORIGINAL_DB
+
 _db_type = "sqlite"
 
 def get_connection():

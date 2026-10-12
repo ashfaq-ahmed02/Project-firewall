@@ -7,7 +7,12 @@ from flask import Flask, render_template, jsonify, request, Response
 from database import query_db, get_db_type, init_db
 from port_filter import check_port
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static")
+)
 
 # GeoIP dictionary for demo/threat-map geolocation
 GEO_IP_LOOKUP = {
