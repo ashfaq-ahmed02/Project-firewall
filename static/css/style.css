@@ -320,11 +320,13 @@ body.soc-theme {
 }
 
 .analyst-profile img {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    border: 2px solid var(--border-subtle);
+    border: 2px solid var(--cyan-dim);
     object-fit: cover;
+    object-position: center 20%;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
 }
 
 .analyst-details h4 {
