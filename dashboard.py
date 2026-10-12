@@ -46,7 +46,6 @@ def resolve_geo(ip):
 # Home Page
 # ===========================
 @app.route("/")
-@app.route("/api/index")
 def home():
     init_db()
 
