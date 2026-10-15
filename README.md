@@ -5,103 +5,140 @@
 </p>
 
 <p align="center">
+  <a href="https://ashu-firewall.vercel.app/">
+    <img src="https://img.shields.io/badge/🚀_LIVE_DEMO-Open_Website-success?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://github.com/ashfaq-ahmed02/Project-firewall">
+    <img src="https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github" alt="GitHub Repository">
+  </a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Flask-Web%20API-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask">
+  <img src="https://img.shields.io/badge/Flask-Web_API-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask">
   <img src="https://img.shields.io/badge/Database-SQLite%20%7C%20MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="Database">
   <img src="https://img.shields.io/badge/Networking-Scapy-2E8B57?style=for-the-badge" alt="Scapy">
 </p>
 
 ---
 
-## 📌 Overview
+## 🌐 Live Demo
 
-**RuShield XDR** is an educational cybersecurity project combining a Flask web application, firewall-rule evaluation, network-event logging, and a dashboard for monitoring traffic decisions.
+**Try the deployed project here:**
 
-The application evaluates source IP addresses and destination ports against configured rules, records ALLOWED or BLOCKED decisions, and presents security activity through a browser-based dashboard. A Scapy-based packet sniffer is included for observing TCP/IP packets in an authorized lab environment.
+### 👉 [Launch RuShield XDR Firewall Dashboard](https://ashu-firewall.vercel.app/)
 
-This project demonstrates network security fundamentals, packet inspection, Python backend development, database integration, REST APIs, and security-dashboard design.
+Explore the deployed web interface and its currently available dashboard features.
 
-> **Important:** This is a learning and monitoring project, not a replacement for an operating-system firewall or a production-grade XDR/SIEM platform. The current rule-checking code records decisions; it does not itself drop packets at the operating-system or network-interface level.
+**Source code:** [github.com/ashfaq-ahmed02/Project-firewall](https://github.com/ashfaq-ahmed02/Project-firewall)
 
-## ✨ Features
+> **Deployment note:** The live website demonstrates the deployed web application. Features that require local packet capture, operating-system privileges, or a separately configured database may not work on a serverless deployment such as Vercel. Actual behavior depends on the deployment configuration.
 
-- 🔥 **Firewall rule evaluation:** Checks configured IP and port rules and applies fallback decisions.
-- 📡 **Packet observation:** Uses Scapy to inspect observed IP/TCP packets.
-- 📝 **Event logging:** Records source IP, destination port, decision, and timestamp.
-- 🗄️ **Database options:** SQLite by default, with optional MySQL support.
-- 🌐 **Flask dashboard:** Serves the web interface and API endpoints.
-- 📊 **Traffic statistics:** Displays summaries derived from recorded events.
-- 🔍 **Security event investigation:** Review logged traffic decisions.
-- 🚨 **Threat-analysis interface:** Provides rule-based/demo analysis and visual indicators.
-- ⚙️ **Rule management:** Supports rule-related functionality implemented in the application.
-- 📈 **Visualizations:** Explore the dashboard's currently implemented charts, filters, and export options.
+---
+
+## 📌 About the Project
+
+**RuShield XDR** is a Python-based cybersecurity learning project designed to demonstrate firewall-rule evaluation, network packet observation, security event logging, and dashboard visualization.
+
+The application combines a Flask backend, database integration, and a browser-based interface to help users understand how network traffic can be examined and classified using IP and port rules.
+
+The project also includes a Scapy-based packet sniffer for observing network packets in an authorized local environment.
+
+### 🎯 Project Objectives
+
+- Understand the fundamentals of network security.
+- Learn how IP addresses and ports are used in traffic filtering.
+- Observe network packets using Python and Scapy.
+- Record and review security-related events.
+- Build a web dashboard for monitoring traffic decisions.
+- Practice backend development, database integration, and API design.
+
+## ✨ Key Features
+
+- 🔥 **Firewall Rule Evaluation** — Checks source IP addresses and destination ports against configured rules.
+- 📡 **Network Packet Observation** — Uses Scapy to inspect observed IP/TCP packets.
+- 📝 **Security Event Logging** — Records traffic decisions and related event information.
+- 🗄️ **Database Integration** — Uses SQLite by default, with optional MySQL support.
+- 🌐 **Web Dashboard** — Provides a browser-based interface using Flask and frontend technologies.
+- 📊 **Traffic Statistics** — Displays summaries derived from recorded events.
+- 🚨 **Threat Indicators** — Presents rule-based or demonstration security assessments.
+- ⚙️ **Port Filtering Logic** — Evaluates traffic against configured port rules.
+- 📈 **Dashboard Visualizations** — Presents security information in a more understandable format.
+- ☁️ **Web Deployment** — Includes a deployed website that can be accessed through the live demo link.
 
 ## 🧰 Technology Stack
 
-| Area | Technologies |
+| Component | Technology |
 |---|---|
-| Backend | Python, Flask |
+| Programming Language | Python |
+| Backend Framework | Flask |
 | Database | SQLite, optional MySQL |
-| Packet observation | Scapy |
+| Packet Observation | Scapy |
 | Frontend | HTML5, CSS3, JavaScript |
-| Dashboard visuals | Chart.js and frontend assets where configured |
-| Tools | Git, GitHub, VS Code |
+| Web Server / Deployment | Vercel for the deployed web interface |
+| Version Control | Git and GitHub |
+| Development Tools | VS Code |
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
 ```text
-       Authorized lab / observed traffic
-                     |
-                     v
-              Scapy Sniffer
-                     |
-                     v
-             IP/TCP Packet Details
-                     |
-                     v
-               Rule Evaluation
-                     |
-              +------+------+
-              |             |
-              v             v
-           ALLOWED        BLOCKED
-              |             |
-              +------+------+
-                     |
-                     v
-                Event Logger
-                     |
-                     v
-                SQLite/MySQL
-                     |
-                     v
-               Flask Backend
-                     |
-                     v
+        Network Traffic / Test Data
+                    |
+                    v
+             Packet Observation
+                 (Scapy)
+                    |
+                    v
+              Rule Evaluation
+                    |
+             +------+------+
+             |             |
+             v             v
+          ALLOWED        BLOCKED
+             |             |
+             +------+------+
+                    |
+                    v
+              Event Logger
+                    |
+                    v
+             SQLite / MySQL
+                    |
+                    v
+              Flask Backend
+                    |
+                    v
               Web Dashboard
+                    |
+                    v
+               User Browser
 ```
 
-### Workflow
+### 🔄 How It Works
 
-1. The sniffer observes IP/TCP packets and extracts the source IP and destination port.
-2. The rule-checking function checks for an explicitly blocked IP and configured port rules.
-3. If no matching rule is found, the current fallback allows ports **80** and **443** and marks other ports as **BLOCKED**.
-4. The event logger stores the decision and timestamp.
-5. Flask provides the dashboard and data endpoints used to inspect recorded activity.
+1. The packet-sniffing component observes network packets in an authorized environment.
+2. The application extracts relevant information, such as the source IP address and destination port.
+3. The rule-checking component evaluates the available IP and port rules.
+4. The application assigns an `ALLOWED` or `BLOCKED` verdict according to its configured logic.
+5. The event logger records the decision.
+6. The dashboard displays the available logs and statistics.
 
-> A logged BLOCKED verdict does not mean the packet was physically dropped.
+> **Important:** The current rule-checking logic records traffic verdicts. A `BLOCKED` verdict does not, by itself, mean that the operating system or network interface dropped the packet.
 
 ## 📂 Project Structure
 
 ```text
 Project-firewall/
+│
 ├── static/
 │   ├── css/
 │   │   └── style.css
 │   └── js/
 │       └── dashboard.js
+│
 ├── templates/
 │   └── index.html
+│
 ├── dashboard.py
 ├── database.py
 ├── logger.py
@@ -112,24 +149,24 @@ Project-firewall/
 └── README.md
 ```
 
-## 🚀 Installation
+## 🚀 Run the Project Locally
 
 ### Prerequisites
 
 - Python 3.10 or newer
 - Git
 - A modern web browser
-- Optional: Scapy and the required capture permissions
-- Optional: MySQL server and its Python connector
+- Optional: Scapy for packet observation
+- Optional: MySQL server for MySQL database support
 
-### 1. Clone the repository
+### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/ashfaq-ahmed02/Project-firewall.git
 cd Project-firewall
 ```
 
-### 2. Create a virtual environment
+### Step 2: Create a virtual environment
 
 **Windows PowerShell**
 
@@ -144,21 +181,21 @@ python -m venv .venv
 .venv\Scripts\activate.bat
 ```
 
-**Linux / macOS**
+**Linux**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install dependencies
+### Step 3: Install dependencies
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-The current requirements file lists Flask and Werkzeug. Install Scapy separately if you want to run the packet sniffer:
+The current `requirements.txt` contains Flask and Werkzeug. To use the packet sniffer, install Scapy separately:
 
 ```bash
 pip install scapy
@@ -170,43 +207,49 @@ For optional MySQL support:
 pip install mysql-connector-python
 ```
 
-### 4. Start the dashboard
+### Step 4: Start the Flask application
 
 ```bash
 python dashboard.py
 ```
 
-Open **http://127.0.0.1:5000** in your browser.
+Open your browser and visit:
 
-### 5. Run the packet sniffer (optional)
+```text
+http://127.0.0.1:5000
+```
 
-Open a second terminal, activate the virtual environment, and run:
+### Step 5: Run the packet sniffer (optional)
+
+Open a second terminal, activate your virtual environment, and run:
 
 ```bash
 python sniffer.py
 ```
 
-Packet capture may require elevated privileges and the correct network interface. Use only on devices and networks you own or are explicitly authorized to monitor. Stop with **Ctrl+C**.
+Packet capture may require additional permissions and the correct network interface. Only monitor devices and networks you own or are explicitly authorized to test.
+
+Stop the sniffer using `Ctrl+C`.
 
 ## 🗄️ Database Configuration
 
-### SQLite (default)
+### SQLite
 
-SQLite is the default database option and normally requires no database server. The application initializes its database through the database helper code.
+SQLite is the default database option. It does not require a separate database server, making it convenient for local development.
 
-### MySQL (optional)
+### Optional MySQL Configuration
 
-Configure these environment variables before starting the application:
+The application supports optional MySQL configuration through environment variables.
 
-| Variable | Purpose | Example |
-|---|---|---|
-| `USE_MYSQL` | Enable the MySQL connection attempt | `true` |
-| `DB_HOST` | MySQL hostname | `localhost` |
-| `DB_USER` | Database username | `firewall_user` |
-| `DB_PASSWORD` | Database password | Set privately |
-| `DB_NAME` | Database name | `firewall_db` |
+| Variable | Purpose |
+|---|---|
+| `USE_MYSQL` | Enables the MySQL connection path |
+| `DB_HOST` | MySQL server hostname |
+| `DB_USER` | MySQL username |
+| `DB_PASSWORD` | MySQL password |
+| `DB_NAME` | Database name |
 
-**Windows PowerShell**
+**Example — Windows PowerShell**
 
 ```powershell
 $env:USE_MYSQL = "true"
@@ -214,10 +257,11 @@ $env:DB_HOST = "localhost"
 $env:DB_USER = "firewall_user"
 $env:DB_PASSWORD = "your-local-password"
 $env:DB_NAME = "firewall_db"
+
 python dashboard.py
 ```
 
-**Linux / macOS**
+**Example — Linux**
 
 ```bash
 export USE_MYSQL=true
@@ -225,54 +269,70 @@ export DB_HOST=localhost
 export DB_USER=firewall_user
 export DB_PASSWORD='your-local-password'
 export DB_NAME=firewall_db
+
 python dashboard.py
 ```
 
-Create the database and grant the configured user the required permissions first. Never commit real credentials to GitHub. If MySQL is unavailable, the current connection helper attempts to fall back to SQLite.
+Create the database and configure the necessary permissions before enabling MySQL.
+
+**Security:** Never commit real passwords, API keys, or other secrets to GitHub. Use environment variables and deployment secrets.
 
 ## 🌐 API Endpoints
 
+The documented Flask endpoints include:
+
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/` | Serves the dashboard |
-| GET | `/api/logs` | Retrieves firewall log data |
-| GET | `/api/stats` | Retrieves dashboard statistics |
+| `GET` | `/` | Loads the dashboard |
+| `GET` | `/api/logs` | Retrieves firewall log data |
+| `GET` | `/api/stats` | Retrieves dashboard statistics |
 
-Review `dashboard.py` for the exact routes, parameters, and response formats in the current version. Additional rule-management, simulation, geolocation/demo, or CSV-export functionality should be documented against the actual route definitions.
+Check `dashboard.py` for the exact route definitions, query parameters, and response formats.
 
-## 🖥️ Dashboard Guide
+Example local requests:
 
-The dashboard is designed to help you inspect:
+```bash
+curl http://127.0.0.1:5000/api/logs
+```
 
-- **Traffic summary:** Total, allowed, and blocked event counts.
-- **Event log:** Source IP, destination port, verdict, and timestamp.
-- **Threat indicators:** Rule-based or demonstration assessments.
-- **Charts:** Visual summaries of recorded traffic.
-- **Rule controls:** Inspect and manage supported IP/port rules.
-- **Alerts and map visuals:** Treat simulated or estimated data as illustrative unless backed by a verified data source.
+```bash
+curl http://127.0.0.1:5000/api/stats
+```
 
-## 🔐 Security Notes and Limitations
+These examples assume the Flask application is running locally and the endpoints are available.
 
-- **Monitoring is not enforcement:** The current rule checker records verdicts but does not install kernel firewall rules or guarantee packet drops.
-- **Rule-based, not verified AI:** Describe threat assessments as heuristic or rule-based unless a real trained model is implemented and evaluated.
-- **Demo geolocation:** Hard-coded or estimated IP locations are illustrative, not authoritative.
-- **Sniffer permissions:** Packet capture may require elevated privileges; minimize privileges whenever possible.
-- **Protect the dashboard:** Add authentication, authorization, input validation, CSRF protection for state-changing browser actions, and secure deployment settings before exposing it beyond a trusted lab.
-- **Protect secrets:** Use environment variables and never publish passwords or API keys.
-- **Privacy:** Capture and retain only the data needed for authorized testing.
+## 🔐 Security Considerations
 
-## 🛣️ Roadmap
+- **Monitoring vs. enforcement:** Rule evaluation does not automatically install operating-system firewall rules or guarantee that packets are dropped.
+- **Authorized monitoring:** Use packet capture only on systems and networks you have permission to inspect.
+- **Credentials:** Store secrets in environment variables or a secure secret manager.
+- **Dashboard protection:** Add authentication and authorization before exposing sensitive controls to untrusted users.
+- **Input validation:** Validate user-supplied IP addresses, ports, and other inputs.
+- **Production deployment:** Use secure configuration, appropriate logging, error handling, and a production-ready server setup.
+- **Demo data:** Treat simulated threat indicators or illustrative IP locations as demonstrations unless they are verified against a reliable data source.
+- **Privacy:** Avoid collecting or retaining unnecessary network information.
 
-- [ ] Separate observed, simulated, and live traffic.
-- [ ] Add automated tests for IP and port rule evaluation.
-- [ ] Add authentication and role-based access for rule management.
-- [ ] Make allowed ports and default policies configurable.
-- [ ] Add structured logging and log-retention controls.
-- [ ] Improve error handling and database configuration.
-- [ ] Add verified threat-intelligence integrations.
-- [ ] Add report generation and alert delivery.
-- [ ] Integrate actual OS firewall enforcement in a controlled, platform-specific module.
-- [ ] Add containerized deployment documentation.
+## ☁️ Deployment
+
+The project has a deployed web interface available at:
+
+**Live URL:** https://ashu-firewall.vercel.app/
+
+**Deployment platform:** Vercel
+
+When deploying or updating the project:
+
+1. Push the latest project changes to GitHub.
+2. Confirm that Vercel is connected to the correct repository and branch.
+3. Configure the required environment variables in the deployment settings.
+4. Verify that the configured build and start process matches the application's architecture.
+5. Test the deployed routes and dashboard after deployment.
+
+### Deployment Limitation
+
+Vercel serverless deployments do not provide the same environment as a continuously running machine with direct network-interface access. Consequently, packet sniffing and local firewall enforcement generally require a separate host or service designed for those tasks.
+
+SQLite files written to temporary or ephemeral storage may also not persist reliably between serverless executions. A persistent database is more appropriate if the deployed application needs durable logs.
 
 ## 🧪 Testing
 
@@ -282,38 +342,74 @@ Run the test script included in the repository:
 python test.py
 ```
 
-If you add pytest-based tests, install pytest and run `pytest`. Document confirmed test results when an automated test suite is available.
+If you add a pytest-based test suite, install pytest and run:
+
+```bash
+pip install pytest
+pytest
+```
+
+Document test results only after running the relevant tests.
+
+## 🛣️ Future Improvements
+
+- [ ] Add automated tests for IP and port rule evaluation.
+- [ ] Make port policies and default rules configurable.
+- [ ] Add authentication and role-based access control.
+- [ ] Improve input validation and error handling.
+- [ ] Add persistent database support for deployed environments.
+- [ ] Add structured logs and log-retention settings.
+- [ ] Integrate verified threat-intelligence sources.
+- [ ] Improve reporting and alert notifications.
+- [ ] Add an authorized, platform-specific OS firewall enforcement module.
+- [ ] Separate simulated events from live network observations.
+- [ ] Improve deployment documentation and monitoring.
 
 ## 🎓 Skills Demonstrated
 
 - Python programming
-- Flask application and REST API development
+- Flask web application development
+- REST API fundamentals
 - Network packet observation with Scapy
 - IP and port rule evaluation
-- SQLite/MySQL integration
-- Security event logging and dashboard visualization
+- SQLite and MySQL integration
+- Security event logging
 - HTML, CSS, and JavaScript
-- Git and GitHub project documentation
+- Git and GitHub
+- Web application deployment
+- Cybersecurity fundamentals
 
 ## 👨‍💻 Author
 
-**Ashfaq Ahmed M**  
+**Ashfaq Ahmed M**
+
 Computer Science Engineering Student | Network Security | Python | Cybersecurity
 
 - **GitHub:** [@ashfaq-ahmed02](https://github.com/ashfaq-ahmed02)
-- **Project:** [Project-firewall](https://github.com/ashfaq-ahmed02/Project-firewall)
+- **Project Repository:** [Project-firewall](https://github.com/ashfaq-ahmed02/Project-firewall)
+- **Live Demo:** [ashu-firewall.vercel.app](https://ashu-firewall.vercel.app/)
 - **LinkedIn:** [Ashfaq Ahmed M](https://www.linkedin.com/in/ashfaq-ahmed-m-b3a49a2a5/)
 
 ## 🤝 Contributing
 
-Suggestions, bug reports, and improvements are welcome. Open an issue to discuss a significant change, then submit a pull request with a clear description.
+Suggestions, bug reports, and improvements are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make and test your changes.
+4. Submit a pull request with a clear description.
 
 ## 📜 License
 
-The original README declares an MIT License. Ensure a `LICENSE` file containing the full MIT License is present in the repository before relying on that declaration.
+Add a `LICENSE` file to the repository if you want to distribute this project under a specific open-source license. Make sure the README and license file agree.
 
 ---
 
 <p align="center">
-  Built by <strong>Ashfaq Ahmed M</strong> as a cybersecurity and network-monitoring learning project.
+  <strong>Built by Ashfaq Ahmed M</strong>
+  <br>
+  Exploring Network Security, Python, and Cybersecurity.
+  <br><br>
+  🚀 <a href="https://ashu-firewall.vercel.app/">Live Demo</a> ·
+  💻 <a href="https://github.com/ashfaq-ahmed02/Project-firewall">GitHub Repository</a>
 </p>
